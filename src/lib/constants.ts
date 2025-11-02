@@ -1,3 +1,4 @@
+
 export const HIGH_RISK_FACTORS = [
   'Family history of permanent childhood hearing loss',
   'NICU stay of more than 5 days',
@@ -41,6 +42,26 @@ export const AUDITORY_MILESTONES = [
       'Starts to respond to simple requests',
       'Babbles with changes in tone',
       'Says "ma-ma" or "da-da"',
+    ],
+  },
+  {
+    ageGroup: 'By the End of 18 Months',
+    milestones: [
+      'Localizes directly all signals to side, below and above.',
+      'Recognize names of familiar people, objects, and body parts.',
+      'Follow simple directions accompanied by gestures.',
+      'Say as many as 10 words.',
+    ],
+  },
+  {
+    ageGroup: 'By the End of 24 Months',
+    milestones: [
+      'Locates directly a sound at any angle.',
+      'Use simple phrases, such as "more milk".',
+      'Ask one- to two-word questions, such as "Goodbye bye?"',
+      'Follow simple commands and understand simple questions.',
+      'Speak about 50 or more words.',
+      'Speak well enough to be understood at least half the time by parents and other primary caregivers.',
     ],
   },
 ];
