@@ -1,3 +1,10 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "login-hero",
+      "description": "A happy infant wearing soft headphones, smiling.",
+      "imageUrl": "https://images.unsplash.com/photo-1649880210584-3365f4c4c08b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxoYXBweSUyMGluZmFudHxlbnwwfHx8fDE3NjIwODk3NTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy infant"
+    }
+  ]
 }
