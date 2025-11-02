@@ -4,6 +4,7 @@ import {
   generateScreeningRecommendations,
   GenerateScreeningRecommendationsInput,
 } from '@/ai/flows/generate-screening-recommendations';
+import { generateAudio } from '@/ai/flows/generate-audio';
 import { revalidatePath } from 'next/cache';
 
 export async function getRecommendations(
@@ -16,5 +17,15 @@ export async function getRecommendations(
   } catch (error) {
     console.error('Error generating recommendations:', error);
     return { success: false, error: 'Failed to generate recommendations.' };
+  }
+}
+
+export async function getAudio(text: string) {
+  try {
+    const result = await generateAudio(text);
+    return { success: true, media: result.media };
+  } catch (error) {
+    console.error('Error generating audio:', error);
+    return { success: false, error: 'Failed to generate audio.' };
   }
 }

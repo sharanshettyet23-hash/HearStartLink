@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import * as Tone from 'tone';
+import { getAudio } from '@/lib/actions';
 
 const lingTestSchema = z.object({
   observations: z.string().optional(),
@@ -28,6 +28,8 @@ export default function LingTestPage() {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [audioCache, setAudioCache] = useState<Record<string, string>>({});
+  const [isSoundLoading, setIsSoundLoading] = useState<string | null>(null);
 
   const form = useForm<LingTestFormValues>({
     resolver: zodResolver(lingTestSchema),
@@ -60,38 +62,27 @@ export default function LingTestPage() {
   
   const playSound = async (sound: string) => {
     if (!isClient) return;
+    
+    if (audioCache[sound]) {
+      const audio = new Audio(audioCache[sound]);
+      audio.play();
+      return;
+    }
 
-    await Tone.start();
-    let synth;
-    switch (sound) {
-      case 'a':
-        synth = new Tone.Synth().toDestination();
-        synth.triggerAttackRelease('F3', '8n');
-        break;
-      case 'u':
-        synth = new Tone.Synth().toDestination();
-        synth.triggerAttackRelease('C3', '8n');
-        break;
-      case 'i':
-        synth = new Tone.Synth().toDestination();
-        synth.triggerAttackRelease('G4', '8n');
-        break;
-      case 'm':
-        synth = new Tone.Synth({ oscillator: { type: 'sine' } }).toDestination();
-        synth.triggerAttackRelease('A2', '8n');
-        break;
-      case 's':
-        const s_noise = new Tone.Noise('white').toDestination();
-        const s_filter = new Tone.Filter(4000, 'highpass').toDestination();
-        s_noise.connect(s_filter);
-        s_noise.start().stop('+0.5');
-        break;
-      case 'sh':
-        const sh_noise = new Tone.Noise('pink').toDestination();
-        const sh_filter = new Tone.Filter(2000, 'bandpass').toDestination();
-        sh_noise.connect(sh_filter);
-        sh_noise.start().stop('+0.5');
-        break;
+    setIsSoundLoading(sound);
+    try {
+      const result = await getAudio(sound);
+      if (result.success && result.media) {
+        setAudioCache(prev => ({...prev, [sound]: result.media!}));
+        const audio = new Audio(result.media);
+        audio.play();
+      } else {
+         toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
+      }
+    } catch (error) {
+       toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
+    } finally {
+      setIsSoundLoading(null);
     }
   };
 
@@ -133,8 +124,8 @@ export default function LingTestPage() {
                   <p className="text-4xl font-bold font-mono text-primary">{sound}</p>
                   <p className="text-sm text-muted-foreground">{ipa}</p>
                   <p className="text-xs text-muted-foreground">{description}</p>
-                  <Button variant="ghost" size="icon" onClick={() => playSound(sound)} className="mt-4" disabled={!isClient}>
-                    <Volume2 className="h-6 w-6" />
+                  <Button variant="ghost" size="icon" onClick={() => playSound(sound)} className="mt-4" disabled={!isClient || isSoundLoading !== null}>
+                    {isSoundLoading === sound ? <Loader2 className="h-6 w-6 animate-spin" /> : <Volume2 className="h-6 w-6" />}
                   </Button>
                 </Card>
               ))}
