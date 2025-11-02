@@ -49,8 +49,10 @@ export function LoginForm() {
       });
       // The AuthProvider will handle redirection
     } catch (error) {
-      console.error('Login Error:', error);
       const firebaseError = error as FirebaseError;
+      if (firebaseError.code !== 'auth/invalid-credential') {
+        console.error('Login Error:', error);
+      }
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
