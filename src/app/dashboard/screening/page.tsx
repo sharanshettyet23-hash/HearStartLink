@@ -22,8 +22,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { HIGH_RISK_FACTORS } from '@/lib/constants';
 import { getRecommendations } from '@/lib/actions';
 import { useState, useEffect, useCallback } from 'react';
 import { Loader2, Sparkles, BellRing } from 'lucide-react';
@@ -38,7 +36,6 @@ const screeningSchema = z.object({
   screeningStatus: z.enum(['Passed', 'Referred', 'Not Yet Screened'], {
     required_error: 'You need to select a screening status.',
   }),
-  riskFactors: z.array(z.string()).optional(),
 });
 
 type ScreeningFormValues = z.infer<typeof screeningSchema>;
@@ -53,10 +50,11 @@ export default function ScreeningPage() {
     reminder: boolean;
   } | null>(null);
   const [ageInMonths, setAgeInMonths] = useState<number | null>(null);
+  const [riskFactors, setRiskFactors] = useState<string[]>([]);
 
   const form = useForm<ScreeningFormValues>({
     resolver: zodResolver(screeningSchema),
-    defaultValues: { riskFactors: [] },
+    defaultValues: {},
   });
 
   const fetchScreeningData = useCallback(async () => {
@@ -73,8 +71,9 @@ export default function ScreeningPage() {
       const screeningRef = doc(db, 'screenings', user.uid);
       const screeningSnap = await getDoc(screeningRef);
       if (screeningSnap.exists()) {
-        form.reset(screeningSnap.data());
         const data = screeningSnap.data();
+        form.reset({ screeningStatus: data.screeningStatus });
+        setRiskFactors(data.riskFactors ?? []);
         if (data.recommendations) {
            setRecommendations({ text: data.recommendations, reminder: data.reminderNeeded });
         }
@@ -106,7 +105,7 @@ export default function ScreeningPage() {
       const result = await getRecommendations({
         screeningStatus: values.screeningStatus as 'Passed' | 'Referred' | 'Not Yet Screened',
         ageInMonths: ageInMonths,
-        riskFactors: values.riskFactors,
+        riskFactors: riskFactors,
       });
 
       if (result.success && result.data) {
@@ -117,12 +116,13 @@ export default function ScreeningPage() {
 
         // Save to Firestore
         await setDoc(doc(db, 'screenings', user.uid), {
-          ...values,
+          screeningStatus: values.screeningStatus,
+          riskFactors: riskFactors,
           userId: user.uid,
           lastUpdated: new Date().toISOString(),
           recommendations: result.data.recommendations,
           reminderNeeded: result.data.reminderNeeded,
-        });
+        }, { merge: true });
         
         toast({ title: 'Success', description: 'Recommendations generated.' });
       } else {
@@ -156,8 +156,8 @@ export default function ScreeningPage() {
             <CardHeader>
               <CardTitle>Hearing Screening</CardTitle>
               <CardDescription>
-                Record the latest screening status and any known risk factors to
-                receive personalized guidance.
+                Record the latest screening status to receive personalized guidance. 
+                Manage risk factors in the 'Risk Factors' section.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
@@ -195,59 +195,6 @@ export default function ScreeningPage() {
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="riskFactors"
-                render={() => (
-                  <FormItem>
-                    <div className="mb-4">
-                      <FormLabel className="text-base">
-                        High-Risk Factors
-                      </FormLabel>
-                      <FormDescription>
-                        Select any factors that apply to the infant.
-                      </FormDescription>
-                    </div>
-                    <div className="space-y-2">
-                    {HIGH_RISK_FACTORS.map((item) => (
-                      <FormField
-                        key={item}
-                        control={form.control}
-                        name="riskFactors"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={item}
-                              className="flex flex-row items-start space-x-3 space-y-0"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(item)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([...(field.value ?? []), item])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {item}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

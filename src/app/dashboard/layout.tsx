@@ -23,6 +23,7 @@ import {
   Ear,
   LogOut,
   UserCircle,
+  AlertTriangle,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,7 @@ const navItems = [
   { href: '/dashboard/screening', icon: ClipboardCheck, label: 'Screening' },
   { href: '/dashboard/checklist', icon: ListChecks, label: 'Checklist' },
   { href: '/dashboard/ling-test', icon: Ear, label: 'Ling-6 Test' },
+  { href: '/dashboard/risk-factors', icon: AlertTriangle, label: 'Risk Factors' },
 ];
 
 export default function DashboardLayout({
