@@ -24,6 +24,7 @@ import {
   LogOut,
   UserCircle,
   AlertTriangle,
+  LayoutDashboard,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { AppLogo } from '@/components/icons';
 
 const navItems = [
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/dashboard/profile', icon: Baby, label: 'Infant Profile' },
   { href: '/dashboard/screening', icon: ClipboardCheck, label: 'Screening' },
   { href: '/dashboard/milestones', icon: ListChecks, label: 'Milestones' },
