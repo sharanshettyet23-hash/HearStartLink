@@ -104,7 +104,7 @@ export default function ScreeningPage() {
 
     try {
       const result = await getRecommendations({
-        screeningStatus: values.screeningStatus,
+        screeningStatus: values.screeningStatus as 'Passed' | 'Referred' | 'Not Yet Screened',
         ageInMonths: ageInMonths,
         riskFactors: values.riskFactors,
       });
@@ -150,16 +150,16 @@ export default function ScreeningPage() {
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      <Card>
-        <CardHeader>
-          <CardTitle>Hearing Screening</CardTitle>
-          <CardDescription>
-            Record the latest screening status and any known risk factors to
-            receive personalized guidance.
-          </CardDescription>
-        </CardHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Hearing Screening</CardTitle>
+              <CardDescription>
+                Record the latest screening status and any known risk factors to
+                receive personalized guidance.
+              </CardDescription>
+            </CardHeader>
             <CardContent className="space-y-8">
               <FormField
                 control={form.control}
@@ -259,9 +259,9 @@ export default function ScreeningPage() {
                 Get Recommendations
               </Button>
             </CardFooter>
-          </form>
-        </Form>
-      </Card>
+          </Card>
+        </form>
+      </Form>
 
       <div className="space-y-6">
         <Card className="bg-secondary">

@@ -33,7 +33,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect, useCallback } from 'react';
 
 const profileSchema = z.object({
@@ -69,10 +69,10 @@ export default function ProfilePage() {
       const docRef = doc(db, 'infant_profiles', user.uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        const data = docSnap.data() as ProfileFormValues;
+        const data = docSnap.data();
         form.reset({
           ...data,
-          dob: new Date(data.dob),
+          dob: data.dob ? new Date(data.dob) : new Date(),
         });
       }
     } catch (error) {
@@ -107,7 +107,7 @@ export default function ProfilePage() {
         ...values,
         dob: values.dob.toISOString(),
         userId: user.uid,
-      });
+      }, { merge: true });
       toast({
         title: 'Profile Saved',
         description: "Infant's profile has been updated successfully.",
@@ -129,16 +129,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Infant Profile</CardTitle>
-        <FormDescription>
-          This information is used to personalize screening and milestones.
-        </FormDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Infant Profile</CardTitle>
+            <CardDescription>
+              This information is used to personalize screening and milestones.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-8">
             <div className="grid md:grid-cols-2 gap-8">
               <FormField
                 control={form.control}
@@ -203,6 +203,7 @@ export default function ProfilePage() {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -251,9 +252,9 @@ export default function ProfilePage() {
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save Profile
             </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      </form>
+    </Form>
   );
 }
