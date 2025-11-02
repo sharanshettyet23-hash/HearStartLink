@@ -118,7 +118,7 @@ export default function DashboardRootPage() {
         {dashboardSections.map((section) => (
           <Link href={section.href} key={section.href} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg">
             <Card
-              className="flex flex-col justify-between h-full transition-all hover:shadow-md active:bg-purple-900/10"
+              className="flex flex-col justify-between h-full transition-all hover:shadow-md hover:bg-accent"
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
