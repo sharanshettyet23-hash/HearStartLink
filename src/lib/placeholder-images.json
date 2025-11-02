@@ -5,6 +5,24 @@
       "description": "A happy infant wearing soft headphones, smiling.",
       "imageUrl": "https://images.unsplash.com/photo-1649880210584-3365f4c4c08b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxoYXBweSUyMGluZmFudHxlbnwwfHx8fDE3NjIwODk3NTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "happy infant"
+    },
+    {
+      "id": "dashboard-baby-1",
+      "description": "A cute baby sleeping peacefully.",
+      "imageUrl": "https://images.unsplash.com/photo-1543346242-2b8e41fb91ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzbGVlcGluZyUyMGJhYnl8ZW58MHx8fHwxNzYyMDkzOTg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sleeping baby"
+    },
+    {
+      "id": "dashboard-baby-2",
+      "description": "A baby smiling and looking at the camera.",
+      "imageUrl": "https://images.unsplash.com/photo-1597117753473-9a20330f5fb7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzbWlsaW5nJTIwYmFieXxlbnwwfHx8fDE3NjIwMjE3ODJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smiling baby"
+    },
+    {
+      "id": "dashboard-baby-3",
+      "description": "A baby playing with colorful toys.",
+      "imageUrl": "https://images.unsplash.com/photo-1616540389399-3033c4ba7072?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwbGF5aW5nJTIwYmFieXxlbnwwfHx8fDE3NjIwOTM5ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "playing baby"
     }
   ]
 }

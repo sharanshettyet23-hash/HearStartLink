@@ -19,6 +19,9 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const dashboardSections = [
   {
@@ -73,8 +76,38 @@ const dashboardSections = [
 ];
 
 export default function DashboardRootPage() {
+    const dashboardImages = PlaceHolderImages.filter(img => img.id.startsWith('dashboard-baby-'));
+
   return (
     <div className="space-y-6">
+       <Carousel
+        className="w-full rounded-lg overflow-hidden"
+        opts={{
+          loop: true,
+        }}
+      >
+        <CarouselContent>
+          {dashboardImages.map((image) => (
+            <CarouselItem key={image.id}>
+              <div className="relative h-56">
+                <Image
+                  src={image.imageUrl}
+                  alt={image.description}
+                  data-ai-hint={image.imageHint}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                   <h2 className="text-2xl font-semibold text-white">{image.description}</h2>
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
+      </Carousel>
+
        <div className="space-y-1">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">
