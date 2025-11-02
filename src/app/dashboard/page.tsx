@@ -14,6 +14,7 @@ import {
   Ear,
   AlertTriangle,
   ArrowRight,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -53,6 +54,13 @@ const dashboardSections = [
     icon: AlertTriangle,
     href: '/dashboard/risk-factors',
     color: 'text-rose-500',
+  },
+  {
+    title: 'Reports',
+    description: 'View a consolidated report of all infant data.',
+    icon: FileText,
+    href: '/dashboard/reports',
+    color: 'text-slate-500',
   },
 ];
 

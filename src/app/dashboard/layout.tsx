@@ -25,6 +25,7 @@ import {
   UserCircle,
   AlertTriangle,
   LayoutDashboard,
+  FileText,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,7 @@ const navItems = [
   { href: '/dashboard/milestones', icon: ListChecks, label: 'Milestones' },
   { href: '/dashboard/ling-test', icon: Ear, label: 'Ling-6 Test' },
   { href: '/dashboard/risk-factors', icon: AlertTriangle, label: 'Risk Factors' },
+  { href: '/dashboard/reports', icon: FileText, label: 'Reports' },
 ];
 
 export default function DashboardLayout({
