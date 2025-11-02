@@ -106,7 +106,9 @@ export default function ReportPage() {
           <CardContent className="space-y-3">
              {screening ? (
               <>
-                <p><strong>Status:</strong> <Badge variant={screening.screeningStatus === 'Passed' ? 'default' : 'destructive'}>{screening.screeningStatus || 'N/A'}</Badge></p>
+                <div className="flex items-center gap-2">
+                  <strong>Status:</strong> <Badge variant={screening.screeningStatus === 'Passed' ? 'default' : 'destructive'}>{screening.screeningStatus || 'N/A'}</Badge>
+                </div>
                 <div>
                   <strong>High-Risk Factors:</strong>
                   {screening.riskFactors && screening.riskFactors.length > 0 ? (
