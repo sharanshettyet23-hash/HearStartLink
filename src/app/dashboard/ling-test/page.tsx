@@ -15,12 +15,22 @@ import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { getAudio } from '@/lib/actions';
+import * as Tone from 'tone';
 
 const lingTestSchema = z.object({
   observations: z.string().optional(),
 });
 
 type LingTestFormValues = z.infer<typeof lingTestSchema>;
+
+const soundFrequencies: { [key: string]: string } = {
+  a: 'C4',
+  u: 'G4',
+  i: 'E5',
+  m: 'C3',
+  s: 'C6',
+  sh: 'A5',
+};
 
 export default function LingTestPage() {
   const { user } = useAuth();
@@ -63,28 +73,62 @@ export default function LingTestPage() {
   const playSound = async (sound: string) => {
     if (!isClient) return;
     
+    // Use AI-generated sound if available
     if (audioCache[sound]) {
       const audio = new Audio(audioCache[sound]);
       audio.play();
       return;
     }
 
-    setIsSoundLoading(sound);
+    // Attempt to fetch AI-generated sound for vowels
+    if (['a', 'u', 'i'].includes(sound)) {
+        setIsSoundLoading(sound);
+        try {
+          const result = await getAudio(`The sound "${sound}"`);
+          if (result.success && result.media) {
+            setAudioCache(prev => ({...prev, [sound]: result.media!}));
+            const audio = new Audio(result.media);
+            audio.play();
+          } else {
+             toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
+          }
+        } catch (error) {
+           toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
+        } finally {
+          setIsSoundLoading(null);
+        }
+        return;
+    }
+    
+    // Fallback to Tone.js for other sounds or if AI fails
     try {
-      const result = await getAudio(sound);
-      if (result.success && result.media) {
-        setAudioCache(prev => ({...prev, [sound]: result.media!}));
-        const audio = new Audio(result.media);
-        audio.play();
+      await Tone.start();
+      const synth = new Tone.Synth().toDestination();
+      const freq = soundFrequencies[sound];
+      if (freq) {
+          synth.triggerAttackRelease(freq, "8n");
       } else {
-         toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
+          // For 's' and 'sh', use noise
+          const noiseSynth = new Tone.NoiseSynth().toDestination();
+          if (sound === 's') {
+              noiseSynth.noise.type = 'white';
+              noiseSynth.envelope.attack = 0.005;
+              noiseSynth.envelope.decay = 0.1;
+              noiseSynth.envelope.sustain = 0;
+          } else { // sh
+              noiseSynth.noise.type = 'pink';
+              noiseSynth.envelope.attack = 0.01;
+              noiseSynth.envelope.decay = 0.2;
+              noiseSynth.envelope.sustain = 0;
+          }
+          noiseSynth.triggerAttackRelease("0.2");
       }
-    } catch (error) {
-       toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
-    } finally {
-      setIsSoundLoading(null);
+    } catch (e) {
+      console.error("Tone.js error:", e);
+      toast({ variant: "destructive", title: "Audio Error", description: "Could not play sound." });
     }
   };
+
 
   async function onSubmit(values: LingTestFormValues) {
     if (!user) return;
