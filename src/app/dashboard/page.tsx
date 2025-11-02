@@ -15,11 +15,19 @@ import {
   AlertTriangle,
   ArrowRight,
   FileText,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const dashboardSections = [
+  {
+    title: 'Manage Infants',
+    description: 'Add or select an infant to manage their profile and data.',
+    icon: Users,
+    href: '/dashboard/infants',
+    color: 'text-purple-500',
+  },
   {
     title: 'Infant Profile',
     description: "Manage the infant's personal and guardian information.",
