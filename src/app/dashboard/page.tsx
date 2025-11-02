@@ -116,27 +116,26 @@ export default function DashboardRootPage() {
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {dashboardSections.map((section) => (
-          <Card
-            key={section.href}
-            className="flex flex-col justify-between transition-all hover:shadow-md"
-          >
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <CardTitle className="text-xl">{section.title}</CardTitle>
-                  <CardDescription>{section.description}</CardDescription>
+          <Link href={section.href} key={section.href} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg">
+            <Card
+              className="flex flex-col justify-between h-full transition-all hover:shadow-md active:bg-purple-900/10"
+            >
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <CardTitle className="text-xl">{section.title}</CardTitle>
+                    <CardDescription>{section.description}</CardDescription>
+                  </div>
+                  <section.icon className={`h-8 w-8 ${section.color}`} />
                 </div>
-                <section.icon className={`h-8 w-8 ${section.color}`} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Button asChild variant="outline" className="w-full">
-                <Link href={section.href}>
+              </CardHeader>
+              <CardContent className="mt-auto">
+                <div className="flex items-center text-sm font-medium text-primary">
                   Go to Section <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
