@@ -42,7 +42,7 @@ import { AppLogo } from '@/components/icons';
 const navItems = [
   { href: '/dashboard/profile', icon: Baby, label: 'Infant Profile' },
   { href: '/dashboard/screening', icon: ClipboardCheck, label: 'Screening' },
-  { href: '/dashboard/checklist', icon: ListChecks, label: 'Checklist' },
+  { href: '/dashboard/milestones', icon: ListChecks, label: 'Milestones' },
   { href: '/dashboard/ling-test', icon: Ear, label: 'Ling-6 Test' },
   { href: '/dashboard/risk-factors', icon: AlertTriangle, label: 'Risk Factors' },
 ];
