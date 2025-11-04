@@ -21,7 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, PlusCircle, UserPlus } from 'lucide-react';
+import { Loader2, UserPlus } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -108,6 +108,38 @@ export default function InfantsPage() {
     }
   };
 
+  const renderContent = () => {
+    if (isFetching) {
+      return (
+        <div className="flex justify-center items-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      );
+    }
+
+    if (infants.length > 0) {
+      return (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {infants.map((infant) => (
+            <Card key={infant.id} className="p-4 flex items-center justify-between">
+              <span className="font-medium">{infant.name}</span>
+              <Button variant="outline" size="sm">Select</Button>
+            </Card>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="text-center py-12 border-2 border-dashed rounded-lg">
+        <h3 className="text-lg font-medium text-muted-foreground">No infants found</h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          Click 'Add Infant' to get started.
+        </p>
+      </div>
+    );
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -149,27 +181,7 @@ export default function InfantsPage() {
         </Dialog>
       </CardHeader>
       <CardContent>
-        {isFetching ? (
-          <div className="flex justify-center items-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : infants.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {infants.map((infant) => (
-              <Card key={infant.id} className="p-4 flex items-center justify-between">
-                <span className="font-medium">{infant.name}</span>
-                <Button variant="outline" size="sm">Select</Button>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 border-2 border-dashed rounded-lg">
-            <h3 className="text-lg font-medium text-muted-foreground">No infants found</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Click 'Add Infant' to get started.
-            </p>
-          </div>
-        )}
+        {renderContent()}
       </CardContent>
     </Card>
   );
