@@ -159,28 +159,36 @@ export default function ProfilePage() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Date of Birth</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
+                     <Popover>
+                      <div className="relative">
                         <FormControl>
-                          <Button
-                            variant={'outline'}
-                            className={cn(
-                              'w-full pl-3 text-left font-normal',
-                              !field.value && 'text-muted-foreground'
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, 'PPP')
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
+                           <Input
+                              value={field.value ? format(field.value, 'yyyy-MM-dd') : ''}
+                              onChange={(e) => {
+                                const date = new Date(e.target.value);
+                                if (!isNaN(date.getTime())) {
+                                  field.onChange(date);
+                                }
+                              }}
+                              placeholder="YYYY-MM-DD"
+                            />
                         </FormControl>
-                      </PopoverTrigger>
+                        <PopoverTrigger asChild>
+                           <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                            >
+                              <CalendarIcon className="h-4 w-4 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                      </div>
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
+                          captionLayout="dropdown-buttons"
+                          fromYear={new Date().getFullYear() - 5}
+                          toYear={new Date().getFullYear()}
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={(date) =>
