@@ -1,7 +1,7 @@
 import { initializeApp, getApps, getApp, FirebaseOptions } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getAnalytics, isSupported, Analytics } from 'firebase/analytics';
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,10 +14,15 @@ const firebaseConfig: FirebaseOptions = {
 };
 
 // Initialize Firebase
-export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const analytics =
-  typeof window !== 'undefined'
-    ? isSupported().then((yes) => (yes ? getAnalytics(app) : null))
-    : null;
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let analytics: Promise<Analytics | null> | null = null;
+if (typeof window !== 'undefined') {
+    analytics = isSupported().then((yes) => (yes ? getAnalytics(app) : null));
+}
+
+
+export { app, auth, db, analytics };
