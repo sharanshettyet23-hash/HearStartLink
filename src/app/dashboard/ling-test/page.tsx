@@ -63,7 +63,6 @@ export default function LingTestPage() {
   const playSound = async (sound: string) => {
     if (!isClient) return;
     
-    // Use AI-generated sound if available in cache
     if (audioCache[sound]) {
       const audio = new Audio(audioCache[sound]);
       audio.play();
@@ -72,9 +71,9 @@ export default function LingTestPage() {
 
     setIsSoundLoading(sound);
     try {
-      // Use the 'as in' description for a clearer TTS prompt
       const soundInfo = LING_SIX_SOUNDS.find(s => s.sound === sound);
-      const prompt = `The sound ${sound}, as in ${soundInfo?.description.split('"')[1]}`;
+      // This prompt is structured to ask for the specific phoneme sound.
+      const prompt = `Produce the sound ${soundInfo?.ipa}`;
       
       const result = await getAudio(prompt);
       if (result.success && result.media) {
