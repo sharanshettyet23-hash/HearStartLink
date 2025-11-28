@@ -1,12 +1,6 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  experimental: {
-    // This is to allow cross-origin requests from the development environment.
-    allowedDevOrigins: [
-      'https://6000-firebase-studio-1762089089985.cluster-ikxjzjhlifcwuroomfkjrx437g.cloudworkstations.dev',
-    ],
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
