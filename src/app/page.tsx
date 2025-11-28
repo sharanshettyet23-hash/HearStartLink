@@ -1,10 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { LoginForm } from '@/components/login-form';
 import { SignUpForm } from '@/components/signup-form';
 import { AppLogo } from '@/components/icons';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import PlaceHolderImages from '@/lib/placeholder-images.json';
 
 export default function AuthenticationPage() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'login-hero');

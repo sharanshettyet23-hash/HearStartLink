@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import PlaceHolderImages from '@/lib/placeholder-images.json';
 
 const dashboardSections = [
   {
