@@ -10,6 +10,9 @@ export const HIGH_RISK_FACTORS = [
   'Postnatal infections associated with sensorineural hearing loss',
   'Head trauma',
   'Chemotherapy',
+  'Hyperbilirubinemia requiring exchange transfusion',
+  'Exposure to ototoxic medications (e.g., certain antibiotics)',
+  'Parental or caregiver concern about hearing or development',
 ];
 
 export const AUDITORY_MILESTONES = [
@@ -42,6 +45,7 @@ export const AUDITORY_MILESTONES = [
       'Starts to respond to simple requests',
       'Babbles with changes in tone',
       'Says "ma-ma" or "da-da"',
+      'Imitates speech sounds',
     ],
   },
   {
@@ -51,6 +55,7 @@ export const AUDITORY_MILESTONES = [
       'Recognize names of familiar people, objects, and body parts.',
       'Follow simple directions accompanied by gestures.',
       'Say as many as 10 words.',
+      'Points to a picture in a book when named',
     ],
   },
   {
@@ -62,6 +67,7 @@ export const AUDITORY_MILESTONES = [
       'Follow simple commands and understand simple questions.',
       'Speak about 50 or more words.',
       'Speak well enough to be understood at least half the time by parents and other primary caregivers.',
+      'Points to objects or pictures when they are named in a book',
     ],
   },
 ];
