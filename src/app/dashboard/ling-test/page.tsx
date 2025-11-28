@@ -62,7 +62,7 @@ export default function LingTestPage() {
   
   const playSound = async (sound: string) => {
     if (!isClient) return;
-    
+
     if (audioCache[sound]) {
       const audio = new Audio(audioCache[sound]);
       audio.play();
@@ -71,20 +71,33 @@ export default function LingTestPage() {
 
     setIsSoundLoading(sound);
     try {
-      const soundInfo = LING_SIX_SOUNDS.find(s => s.sound === sound);
-      // This prompt is structured to ask for the specific phoneme sound.
-      const prompt = `Produce the sound ${soundInfo?.ipa}`;
+      const soundInfo = LING_SIX_SOUNDS.find((s) => s.sound === sound);
+      if (!soundInfo) return;
+      
+      let prompt = `Produce the sound ${soundInfo.ipa}`;
+      // Use a more direct prompt for consonants as the model may fail on just the IPA
+      if (['m', 's', 'sh'].includes(sound)) {
+        prompt = `the sound "${sound}"`;
+      }
       
       const result = await getAudio(prompt);
       if (result.success && result.media) {
-        setAudioCache(prev => ({...prev, [sound]: result.media!}));
+        setAudioCache((prev) => ({ ...prev, [sound]: result.media! }));
         const audio = new Audio(result.media);
         audio.play();
       } else {
-         toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
+        toast({
+          variant: 'destructive',
+          title: 'Audio Error',
+          description: 'Could not play sound.',
+        });
       }
     } catch (error) {
-       toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sound.' });
+      toast({
+        variant: 'destructive',
+        title: 'Audio Error',
+        description: 'Could not play sound.',
+      });
     } finally {
       setIsSoundLoading(null);
     }
