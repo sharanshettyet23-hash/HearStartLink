@@ -145,7 +145,7 @@ export default function RiskFactorsPage() {
           </CardFooter>
         </Card>
 
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="bg-destructive text-destructive-foreground border-destructive [&>svg]:text-destructive-foreground">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Important Note</AlertTitle>
           <AlertDescription>
