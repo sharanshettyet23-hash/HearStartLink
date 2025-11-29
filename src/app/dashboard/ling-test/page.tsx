@@ -118,9 +118,9 @@ export default function LingTestPage() {
         }
       } else {
         // Descriptive prompts for environmental sounds
-        if (sound === 'Bell') prompt = 'a clear bell ringing sound for 2 seconds';
-        if (sound === 'Rattle') prompt = 'a clear baby rattle sound for 2 seconds';
-        if (sound === 'Claps') prompt = 'the sound of hands clapping twice';
+        if (sound === 'Bell') prompt = 'a clear temple bell ringing sound for 2 seconds';
+        if (sound === 'Rattle') prompt = 'the sound of people playing with a baby rattle for 2 seconds';
+        if (sound === 'Claps') prompt = 'the sound of people clapping for 2 seconds';
       }
 
       const result = await getAudio(prompt);
