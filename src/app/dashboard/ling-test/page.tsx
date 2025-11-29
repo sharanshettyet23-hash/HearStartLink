@@ -110,22 +110,11 @@ export default function LingTestPage() {
       if (type === 'ling') {
         const soundInfo = LING_SIX_SOUNDS.find((s) => s.sound === sound);
         if (!soundInfo) return;
-
-        if (['a', 'i', 'u'].includes(sound)) {
-          prompt = `Produce the vowel sound ${soundInfo.ipa}`;
-        } else {
-          prompt = `Produce the consonant sound '${sound}'`;
-        }
+        prompt = `The sound '${sound}' ${soundInfo.description}`;
       } else {
-        if (sound === 'Bell')
-          prompt =
-            'Generate a clear, crisp single bell ring. The sound should be bright, metallic, and last about 1 second. No echo, no ambient noise, no background sound—just a clean bell ding.';
-        if (sound === 'Rattle')
-          prompt =
-            'Generate a soft plastic rattle shaking sound. It should last around 1 second and have a light, crisp rattling texture. No background noise, no metallic elements, only a clean plastic rattle shake.';
-        if (sound === 'Claps')
-          prompt =
-            'Generate a short burst of two natural human hand claps. The claps should be sharp, realistic, and slightly spaced by 0.2 seconds. No background noise, no echo, no audience, only clean clap sounds.';
+        if (sound === 'Bell') prompt = 'A single, clear bell ring.';
+        if (sound === 'Rattle') prompt = 'The sound of a plastic baby rattle.';
+        if (sound === 'Claps') prompt = 'The sound of two hands clapping.';
       }
 
       const result = await getAudio(prompt);
@@ -140,7 +129,7 @@ export default function LingTestPage() {
       toast({
         variant: 'destructive',
         title: 'Audio Error',
-        description: error.message || 'Could not play sound.',
+        description: error.message || 'Failed to generate audio.',
       });
     } finally {
       setIsSoundLoading(null);
