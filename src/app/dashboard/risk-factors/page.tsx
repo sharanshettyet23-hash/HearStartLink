@@ -22,12 +22,13 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { HIGH_RISK_FACTORS } from '@/lib/constants';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const riskFactorSchema = z.object({
   riskFactors: z.array(z.string()).optional(),
@@ -89,7 +90,7 @@ export default function RiskFactorsPage() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>High-Risk Factors for Hearing Loss</CardTitle>
@@ -143,6 +144,14 @@ export default function RiskFactorsPage() {
             </Button>
           </CardFooter>
         </Card>
+
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Important Note</AlertTitle>
+          <AlertDescription>
+            Even if a child passes the newborn hearing screening, they may still be at risk. Regular follow-up hearing checks are recommended for children with any of the above risk factors.
+          </AlertDescription>
+        </Alert>
       </form>
     </Form>
   );
