@@ -35,7 +35,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { getTestAudio } from '@/lib/actions';
+import { getAudio } from '@/lib/actions';
 import { Separator } from '@/components/ui/separator';
 
 const lingTestSchema = z.object({
@@ -128,7 +128,7 @@ export default function LingTestPage() {
         throw new Error('Invalid sound selected.');
       }
 
-      const result = await getTestAudio(prompt);
+      const result = await getAudio(prompt);
       if (result.success && result.media) {
         setAudioCache((prev) => ({ ...prev, [sound]: result.media! }));
         const audio = new Audio(result.media);
