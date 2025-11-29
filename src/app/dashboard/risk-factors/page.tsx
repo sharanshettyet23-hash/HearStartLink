@@ -22,7 +22,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { HIGH_RISK_FACTORS } from '@/lib/constants';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, Save, AlertTriangle, ArrowRight, SkipForward } from 'lucide-react';
+import { Loader2, Save, AlertTriangle, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -93,14 +93,13 @@ export default function RiskFactorsPage() {
     if (currentStep < totalSteps) {
       setCurrentStep(prev => prev + 1);
     } else {
-       // This is where final submission happens
       form.handleSubmit(onSubmit)();
     }
   };
 
-  const handleSkip = () => {
-     if (currentStep < totalSteps) {
-      setCurrentStep(prev => prev + 1);
+  const handlePrevious = () => {
+     if (currentStep > 0) {
+      setCurrentStep(prev => prev - 1);
     }
   }
   
@@ -123,7 +122,7 @@ export default function RiskFactorsPage() {
             </div>
           </CardHeader>
           
-          <CardContent>
+          <CardContent className="min-h-[250px]">
             {currentStep < totalSteps ? (
               <div key={currentSection.category}>
                 <h3 className="text-lg font-medium text-primary mb-4">{currentSection.category}</h3>
@@ -172,9 +171,9 @@ export default function RiskFactorsPage() {
           <CardFooter className="flex justify-between">
               {currentStep < totalSteps ? (
                 <>
-                  <Button type="button" variant="outline" onClick={handleSkip} disabled={isLoading}>
-                    <SkipForward className="mr-2 h-4 w-4" />
-                    Skip
+                  <Button type="button" variant="outline" onClick={handlePrevious} disabled={isLoading || currentStep === 0}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Previous
                   </Button>
                   <Button type="button" onClick={handleNext} disabled={isLoading}>
                     Next
@@ -182,10 +181,16 @@ export default function RiskFactorsPage() {
                   </Button>
                 </>
               ) : (
-                <Button type="submit" disabled={isLoading} className="w-full">
-                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                  Save All Risk Factors
-                </Button>
+                 <>
+                  <Button type="button" variant="outline" onClick={handlePrevious} disabled={isLoading}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Previous
+                  </Button>
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                    Save All Risk Factors
+                  </Button>
+                </>
               )}
           </CardFooter>
         </Card>

@@ -23,7 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, ArrowRight, SkipForward, Save } from 'lucide-react';
+import { Loader2, ArrowRight, ArrowLeft, Save } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 export default function MilestonesPage() {
@@ -111,9 +111,9 @@ export default function MilestonesPage() {
     }
   };
 
-  const handleSkip = () => {
-    if (currentGroupIndex < totalGroups) {
-      setCurrentGroupIndex((prev) => prev + 1);
+  const handlePrevious = () => {
+    if (currentGroupIndex > 0) {
+      setCurrentGroupIndex((prev) => prev - 1);
     }
   };
 
@@ -140,7 +140,7 @@ export default function MilestonesPage() {
             </p>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-h-[300px]">
         {currentGroupIndex < totalGroups ? (
             <div key={currentGroup.ageGroup}>
                 <h3 className="text-lg font-medium text-primary mb-4">{currentGroup.ageGroup}</h3>
@@ -181,9 +181,9 @@ export default function MilestonesPage() {
        <CardFooter className="flex justify-between">
             {currentGroupIndex < totalGroups ? (
             <>
-                <Button type="button" variant="outline" onClick={handleSkip} disabled={isLoading}>
-                    <SkipForward className="mr-2 h-4 w-4" />
-                    Skip
+                <Button type="button" variant="outline" onClick={handlePrevious} disabled={isLoading || currentGroupIndex === 0}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Previous
                 </Button>
                 <Button type="button" onClick={handleNext} disabled={isLoading}>
                     Next
@@ -191,10 +191,16 @@ export default function MilestonesPage() {
                 </Button>
             </>
             ) : (
-            <Button onClick={handleSaveChanges} disabled={isLoading} className="w-full">
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                Save Progress
-            </Button>
+            <div className="w-full flex justify-between">
+                <Button type="button" variant="outline" onClick={handlePrevious} disabled={isLoading}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Previous
+                </Button>
+                <Button onClick={handleSaveChanges} disabled={isLoading}>
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                    Save Progress
+                </Button>
+            </div>
             )}
        </CardFooter>
     </Card>
