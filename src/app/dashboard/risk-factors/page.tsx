@@ -7,11 +7,9 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form';
 import {
   Card,
@@ -29,6 +27,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { Separator } from '@/components/ui/separator';
 
 const riskFactorSchema = z.object({
   riskFactors: z.array(z.string()).optional(),
@@ -99,50 +98,43 @@ export default function RiskFactorsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <FormField
-              control={form.control}
-              name="riskFactors"
-              render={() => (
-                <FormItem>
-                  <div className="space-y-2">
-                  {HIGH_RISK_FACTORS.map((item) => (
-                    <FormField
-                      key={item}
-                      control={form.control}
-                      name="riskFactors"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={item}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
+            <div className="space-y-8">
+              {HIGH_RISK_FACTORS.map((group) => (
+                <div key={group.category}>
+                  <h3 className="text-lg font-medium text-primary mb-4">{group.category}</h3>
+                  <div className="space-y-4">
+                    {group.factors.map((factor) => (
+                      <FormField
+                        key={factor}
+                        control={form.control}
+                        name="riskFactors"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                             <FormControl>
                               <Checkbox
-                                checked={field.value?.includes(item)}
+                                checked={field.value?.includes(factor)}
                                 onCheckedChange={(checked) => {
                                   return checked
-                                    ? field.onChange([...(field.value ?? []), item])
+                                    ? field.onChange([...(field.value ?? []), factor])
                                     : field.onChange(
                                         field.value?.filter(
-                                          (value) => value !== item
+                                          (value) => value !== factor
                                         )
                                       );
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">
-                              {item}
+                            <FormLabel className="font-normal text-muted-foreground leading-snug">
+                              {factor}
                             </FormLabel>
                           </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
+                        )}
+                      />
+                    ))}
                   </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </div>
+              ))}
+            </div>
           </CardContent>
           <CardFooter>
             <Button type="submit" disabled={isLoading}>
