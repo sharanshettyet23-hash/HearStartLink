@@ -1,25 +1,31 @@
 
+
 export const HIGH_RISK_FACTORS = [
+  // Prenatal
   'Caregiver concern regarding hearing, speech, language, or developmental delay.',
   'Family history of permanent childhood hearing loss.',
-  'NICU stay of more than 5 days.',
-  'Assisted ventilation including CPAP, ECMO.',
-  'Exposure to ototoxic medications (e.g., gentamycin, tobramycin) or loop diuretics (e.g., furosemide).',
-  'Hyperbilirubinemia requiring exchange transfusion.',
   'In utero infections such as CMV, herpes, rubella, syphilis, toxoplasmosis, Zika.',
   'Craniofacial anomalies, including those involving the pinna, ear canal, ear tags, ear pits, and temporal bone anomalies.',
   'Physical findings or a syndrome associated with hearing loss (e.g., Waardenburg, Usher, Alport, Pendred).',
-  'Neurodegenerative disorders.',
-  'Culture-positive postnatal infections associated with sensorineural hearing loss (e.g., bacterial and viral meningitis).',
-  'Head trauma, especially basal skull or temporal bone fracture requiring hospitalization.',
-  'Chemotherapy.',
   'Parents are blood relatives (consanguineous marriage)',
   'The mother had a serious illness or high fever during pregnancy',
   'The mother took medications known to affect hearing (such as aminoglycosides)',
   'The mother consumed alcohol or tobacco during pregnancy',
   'There was an attempt to terminate the pregnancy',
+
+  // Perinatal
   'The mother had high blood pressure during pregnancy or delivery',
   'The baby was born before 36 weeks of pregnancy (premature)',
+  
+  // Postnatal
+  'NICU stay of more than 5 days.',
+  'Assisted ventilation including CPAP, ECMO.',
+  'Exposure to ototoxic medications (e.g., gentamycin, tobramycin) or loop diuretics (e.g., furosemide).',
+  'Hyperbilirubinemia requiring exchange transfusion.',
+  'Neurodegenerative disorders.',
+  'Culture-positive postnatal infections associated with sensorineural hearing loss (e.g., bacterial and viral meningitis).',
+  'Head trauma, especially basal skull or temporal bone fracture requiring hospitalization.',
+  'Chemotherapy.',
 ];
 
 export const AUDITORY_MILESTONES = [
