@@ -1,5 +1,6 @@
 
 
+
 export const HIGH_RISK_FACTORS = [
   {
     category: 'Family and Genetic History',
@@ -12,11 +13,11 @@ export const HIGH_RISK_FACTORS = [
   {
     category: 'During Pregnancy',
     factors: [
-      'The mother had a <strong>serious illness</strong> or high fever during pregnancy.',
+      'The mother had a <strong>serious illness or high fever</strong> during pregnancy.',
       'The mother took <strong>medications known to affect hearing</strong> (such as aminoglycosides).',
       'The mother consumed <strong>alcohol or tobacco</strong> during pregnancy.',
-      'There was an attempt to <strong>terminate the pregnancy</strong>.',
-      '<strong>In utero infections</strong> such as CMV, herpes, rubella, syphilis, toxoplasmosis, Zika.',
+      'There was an <strong>attempt to terminate the pregnancy</strong>.',
+      'The mother had <strong>infections</strong> like rubella, cytomegalovirus (CMV), syphilis, toxoplasmosis, herpes, or Zika virus during pregnancy.',
       'The mother had <strong>high blood pressure</strong> during pregnancy or delivery.',
     ],
   },
@@ -24,11 +25,11 @@ export const HIGH_RISK_FACTORS = [
     category: 'At Birth',
     factors: [
       'The baby was born <strong>before 36 weeks</strong> of pregnancy (premature).',
-      "The baby's birth weight was <strong>low, especially below 1500 grams</strong>.",
-      'The baby <strong>did not cry immediately</strong> after birth.',
+      'The baby\'s <strong>birth weight was low</strong>, especially below 1500 grams.',
+      'The baby <strong>did not cry immediately after birth</strong>.',
       'The baby had <strong>jaundice</strong> that required special treatment (phototherapy or exchange transfusion).',
-      '<strong>NICU stay of more than 5 days</strong>.',
-      '<strong>Assisted ventilation</strong> including CPAP, ECMO.',
+      'The baby was admitted to the <strong>Neonatal Intensive Care Unit (NICU) for more than 5 days</strong>.',
+      'The baby required <strong>assisted breathing</strong> or mechanical ventilation.',
       'The delivery was <strong>complicated</strong> (breech, prolonged, or difficult labor).',
     ],
   },
