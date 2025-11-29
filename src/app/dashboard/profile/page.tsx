@@ -113,7 +113,6 @@ export default function ProfilePage() {
         description: "Infant's profile has been updated successfully.",
       });
     } catch (error) {
-      console.error('Profile Save Error:', error);
       toast({
         variant: 'destructive',
         title: 'Uh oh!',

@@ -45,7 +45,6 @@ export default function ReportPage() {
       const data = results.reduce((acc, current) => ({ ...acc, ...current }), {});
       setReportData(data);
     } catch (error) {
-      console.error("Failed to fetch report data:", error);
       toast({
         variant: 'destructive',
         title: 'Error',
