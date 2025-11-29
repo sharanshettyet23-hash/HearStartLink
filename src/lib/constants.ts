@@ -1,30 +1,35 @@
 
 
 export const HIGH_RISK_FACTORS = [
-  // Prenatal
   'Caregiver concern regarding hearing, speech, language, or developmental delay.',
+  'Parents are blood relatives (consanguineous marriage).',
   'Family history of permanent childhood hearing loss.',
-  'In utero infections such as CMV, herpes, rubella, syphilis, toxoplasmosis, Zika.',
-  'Craniofacial anomalies, including those involving the pinna, ear canal, ear tags, ear pits, and temporal bone anomalies.',
+  'The child has a known genetic condition or syndrome linked to hearing loss (e.g., Waardenburg, Pendred, BOR syndrome).',
   'Physical findings or a syndrome associated with hearing loss (e.g., Waardenburg, Usher, Alport, Pendred).',
-  'Parents are blood relatives (consanguineous marriage)',
-  'The mother had a serious illness or high fever during pregnancy',
-  'The mother took medications known to affect hearing (such as aminoglycosides)',
-  'The mother consumed alcohol or tobacco during pregnancy',
-  'There was an attempt to terminate the pregnancy',
-
-  // Perinatal
-  'The mother had high blood pressure during pregnancy or delivery',
-  'The baby was born before 36 weeks of pregnancy (premature)',
-  
-  // Postnatal
+  'The mother had a serious illness or high fever during pregnancy.',
+  'The mother took medications known to affect hearing (such as aminoglycosides).',
+  'The mother consumed alcohol or tobacco during pregnancy.',
+  'There was an attempt to terminate the pregnancy.',
+  'In utero infections such as CMV, herpes, rubella, syphilis, toxoplasmosis, Zika.',
+  'The mother had high blood pressure during pregnancy or delivery.',
+  'The baby was born before 36 weeks of pregnancy (premature).',
+  'The baby’s birth weight was low, especially below 1500 grams.',
+  'The baby did not cry immediately after birth.',
+  'The baby had jaundice that required special treatment (phototherapy or exchange transfusion).',
   'NICU stay of more than 5 days.',
   'Assisted ventilation including CPAP, ECMO.',
+  'The delivery was complicated (breech, prolonged, or difficult labor).',
+  'Craniofacial anomalies, including those involving the pinna, ear canal, ear tags, ear pits, and temporal bone anomalies.',
+  'The baby was born with abnormalities in the head, ears, eyes, lips, or face.',
+  'The child shows features of a syndrome that may be associated with hearing problems.',
+  'The child had bacterial meningitis or brain infections (e.g., encephalitis).',
+  'The child had illnesses like measles or mumps.',
+  'Head trauma, especially basal skull or temporal bone fracture requiring hospitalization.',
+  'The child has had repeated ear infections lasting more than 3 months.',
   'Exposure to ototoxic medications (e.g., gentamycin, tobramycin) or loop diuretics (e.g., furosemide).',
   'Hyperbilirubinemia requiring exchange transfusion.',
   'Neurodegenerative disorders.',
   'Culture-positive postnatal infections associated with sensorineural hearing loss (e.g., bacterial and viral meningitis).',
-  'Head trauma, especially basal skull or temporal bone fracture requiring hospitalization.',
   'Chemotherapy.',
 ];
 
