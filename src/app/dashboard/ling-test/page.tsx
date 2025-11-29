@@ -35,7 +35,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { getAudio } from '@/lib/actions';
+import { getTestAudio } from '@/lib/actions';
 import { Separator } from '@/components/ui/separator';
 
 const lingTestSchema = z.object({
@@ -110,37 +110,35 @@ export default function LingTestPage() {
       if (type === 'ling') {
         switch (sound) {
           case 'a':
-            prompt = "The sound 'ah'";
+            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="ɑ"></phoneme></speak>`;
             break;
           case 'u':
-            prompt = "The sound 'oo'";
+            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="u"></phoneme></speak>`;
             break;
           case 'i':
-            prompt = "The sound 'ee'";
+            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="i"></phoneme></speak>`;
             break;
           case 'm':
-            prompt = 'The sound mmm';
+            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="m"></phoneme></speak>`;
             break;
           case 's':
-            prompt = 'The sound sss';
+            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="s"></phoneme></speak>`;
             break;
           case 'sh':
-            prompt = 'The sound shh';
+            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="ʃ"></phoneme></speak>`;
             break;
-          default:
-            prompt = sound;
         }
       } else {
-        if (sound === 'Bell') prompt = 'bell';
-        if (sound === 'Rattle') prompt = 'rattle';
-        if (sound === 'Claps') prompt = 'clapping';
+        if (sound === 'Bell') prompt = 'Sound: A single clear temple bell ring.';
+        if (sound === 'Rattle') prompt = 'Sound: A baby rattle shaking.';
+        if (sound === 'Claps') prompt = 'Sound: Two hands clapping.';
       }
 
       if (!prompt) {
         throw new Error('Invalid sound selected.');
       }
 
-      const result = await getAudio(prompt);
+      const result = await getTestAudio(prompt);
       if (result.success && result.media) {
         setAudioCache((prev) => ({ ...prev, [sound]: result.media! }));
         const audio = new Audio(result.media);
