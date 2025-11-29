@@ -6,7 +6,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from '@/components/ui/card';
 import { AUDITORY_MILESTONES } from '@/lib/constants';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -16,7 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowRight, SkipForward, Save } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 export default function MilestonesPage() {
@@ -25,9 +32,20 @@ export default function MilestonesPage() {
   const [completedMilestones, setCompletedMilestones] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
 
-  const totalMilestones = AUDITORY_MILESTONES.reduce((sum, group) => sum + group.milestones.length, 0);
-  const progress = totalMilestones > 0 ? (completedMilestones.length / totalMilestones) * 100 : 0;
+  const totalMilestones = AUDITORY_MILESTONES.reduce(
+    (sum, group) => sum + group.milestones.length,
+    0
+  );
+  const progress =
+    totalMilestones > 0
+      ? (completedMilestones.length / totalMilestones) * 100
+      : 0;
+
+  const totalGroups = AUDITORY_MILESTONES.length;
+  const stepProgress = ((currentGroupIndex + 1) / (totalGroups + 1)) * 100;
+  const currentGroup = AUDITORY_MILESTONES[currentGroupIndex];
 
   const fetchMilestonesData = useCallback(async () => {
     if (!user) return;
@@ -39,7 +57,11 @@ export default function MilestonesPage() {
         setCompletedMilestones(docSnap.data().completed ?? []);
       }
     } catch (e) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Failed to load milestones data.' });
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to load milestones data.',
+      });
     } finally {
       setIsFetching(false);
     }
@@ -48,7 +70,7 @@ export default function MilestonesPage() {
   useEffect(() => {
     fetchMilestonesData();
   }, [fetchMilestonesData]);
-  
+
   const handleToggleMilestone = (milestone: string) => {
     setCompletedMilestones((prev) =>
       prev.includes(milestone)
@@ -56,7 +78,7 @@ export default function MilestonesPage() {
         : [...prev, milestone]
     );
   };
-  
+
   const handleSaveChanges = async () => {
     if (!user) return;
     setIsLoading(true);
@@ -66,16 +88,41 @@ export default function MilestonesPage() {
         userId: user.uid,
         lastUpdated: new Date().toISOString(),
       });
-      toast({ title: 'Milestones Saved', description: 'Your progress has been updated.' });
+      toast({
+        title: 'Milestones Saved',
+        description: 'Your progress has been updated.',
+      });
     } catch (e) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Failed to save changes.' });
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to save changes.',
+      });
     } finally {
       setIsLoading(false);
     }
-  }
+  };
+
+  const handleNext = () => {
+    if (currentGroupIndex < totalGroups) {
+      setCurrentGroupIndex((prev) => prev + 1);
+    } else {
+      handleSaveChanges();
+    }
+  };
+
+  const handleSkip = () => {
+    if (currentGroupIndex < totalGroups) {
+      setCurrentGroupIndex((prev) => prev + 1);
+    }
+  };
 
   if (isFetching) {
-    return <div className="flex justify-center items-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return (
+      <div className="flex justify-center items-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
@@ -83,53 +130,73 @@ export default function MilestonesPage() {
       <CardHeader>
         <CardTitle>Auditory Milestones</CardTitle>
         <CardDescription>
-          Track the infant's progress by checking off observed auditory milestones.
+          Track the infant's progress by checking off observed auditory
+          milestones.
         </CardDescription>
+         <div className="pt-4 space-y-2">
+            <Progress value={stepProgress} className="w-full" />
+            <p className="text-sm text-muted-foreground mt-2">
+                Step {currentGroupIndex + 1} of {totalGroups + 1}
+            </p>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-            <div className="space-y-2">
-                <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Progress</span>
-                    <span>{completedMilestones.length} / {totalMilestones} completed</span>
-                </div>
-                <Progress value={progress} />
-            </div>
-
-            <Accordion type="multiple" defaultValue={AUDITORY_MILESTONES.map(g => g.ageGroup)}>
-            {AUDITORY_MILESTONES.map((group) => (
-                <AccordionItem value={group.ageGroup} key={group.ageGroup}>
-                <AccordionTrigger className="text-lg font-medium">
-                    {group.ageGroup}
-                </AccordionTrigger>
-                <AccordionContent>
-                    <div className="space-y-4 pl-2">
-                    {group.milestones.map((milestone) => (
-                        <div key={milestone} className="flex items-center space-x-3">
-                        <Checkbox
-                            id={milestone}
-                            checked={completedMilestones.includes(milestone)}
-                            onCheckedChange={() => handleToggleMilestone(milestone)}
-                        />
-                        <Label
-                            htmlFor={milestone}
-                            className="text-sm font-normal leading-snug text-muted-foreground"
-                        >
-                            {milestone}
-                        </Label>
-                        </div>
-                    ))}
+        {currentGroupIndex < totalGroups ? (
+            <div key={currentGroup.ageGroup}>
+                <h3 className="text-lg font-medium text-primary mb-4">{currentGroup.ageGroup}</h3>
+                <div className="space-y-4 pl-2">
+                {currentGroup.milestones.map((milestone) => (
+                    <div key={milestone} className="flex items-center space-x-3">
+                    <Checkbox
+                        id={milestone}
+                        checked={completedMilestones.includes(milestone)}
+                        onCheckedChange={() => handleToggleMilestone(milestone)}
+                    />
+                    <Label
+                        htmlFor={milestone}
+                        className="text-sm font-normal leading-snug text-muted-foreground"
+                    >
+                        {milestone}
+                    </Label>
                     </div>
-                </AccordionContent>
-                </AccordionItem>
-            ))}
-            </Accordion>
-            <Button onClick={handleSaveChanges} disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                ))}
+                </div>
+            </div>
+        ) : (
+             <div>
+                <h3 className="text-lg font-medium text-primary mb-4">Summary</h3>
+                <div className="space-y-2">
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                        <span>Overall Progress</span>
+                        <span>{completedMilestones.length} / {totalMilestones} completed</span>
+                    </div>
+                    <Progress value={progress} />
+                </div>
+                 <p className="text-muted-foreground text-sm mt-4">
+                    You have reviewed all milestone categories. Click the button below to save your progress.
+                </p>
+            </div>
+        )}
+      </CardContent>
+       <CardFooter className="flex justify-between">
+            {currentGroupIndex < totalGroups ? (
+            <>
+                <Button type="button" variant="outline" onClick={handleSkip} disabled={isLoading}>
+                    <SkipForward className="mr-2 h-4 w-4" />
+                    Skip
+                </Button>
+                <Button type="button" onClick={handleNext} disabled={isLoading}>
+                    Next
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+            </>
+            ) : (
+            <Button onClick={handleSaveChanges} disabled={isLoading} className="w-full">
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                 Save Progress
             </Button>
-        </div>
-      </CardContent>
+            )}
+       </CardFooter>
     </Card>
   );
 }
