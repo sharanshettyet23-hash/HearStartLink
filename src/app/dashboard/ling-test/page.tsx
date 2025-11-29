@@ -37,7 +37,6 @@ import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { getAudio } from '@/lib/actions';
 import { Separator } from '@/components/ui/separator';
-import * as Tone from 'tone';
 
 const lingTestSchema = z.object({
   observations: z.string().optional(),
@@ -93,66 +92,10 @@ export default function LingTestPage() {
     fetchTestData();
   }, [fetchTestData]);
 
-  const playEnvironmentalSound = async (soundName: string) => {
-    if (!isClient) return;
-
-    if (audioCache[soundName]) {
-      const audio = new Audio(audioCache[soundName]);
-      audio.play();
-      return;
-    }
-    
-    setIsSoundLoading(soundName);
-
-    try {
-      // Simple local sound generation with Tone.js
-      let synth;
-      if (soundName === 'Bell') {
-        synth = new Tone.MetalSynth({
-          frequency: 300,
-          envelope: { attack: 0.001, decay: 0.4, release: 0.2 },
-          harmonicity: 5.1,
-          modulationIndex: 32,
-          resonance: 4000,
-          octaves: 1.5,
-        }).toDestination();
-        synth.triggerAttackRelease('C4', '8n');
-      } else if (soundName === 'Rattle') {
-        synth = new Tone.NoiseSynth({
-          noise: { type: 'white' },
-          envelope: { attack: 0.005, decay: 0.1, sustain: 0 },
-        }).toDestination();
-        synth.triggerAttackRelease('4n');
-      } else if (soundName === 'Claps') {
-        synth = new Tone.MembraneSynth({
-          pitchDecay: 0.01,
-          octaves: 10,
-          oscillator: { type: 'whitenoise' },
-          envelope: {
-            attack: 0.005,
-            decay: 0.25,
-            sustain: 0.01,
-            release: 1.4,
-            attackCurve: 'exponential',
-          },
-        }).toDestination();
-        synth.triggerAttackRelease('C2', '8n');
-      }
-       // We don't cache Tone.js sounds as they are generated on the fly.
-    } catch(error) {
-       toast({
-        variant: 'destructive',
-        title: 'Audio Error',
-        description: 'Could not play environmental sound.',
-      });
-    } finally {
-        // Add a small delay to allow the sound to play
-        setTimeout(() => setIsSoundLoading(null), 300);
-    }
-  };
-
-
-  const playLingSound = async (sound: string) => {
+  const playSound = async (
+    sound: string,
+    type: 'ling' | 'environmental'
+  ) => {
     if (!isClient) return;
 
     if (audioCache[sound]) {
@@ -163,31 +106,36 @@ export default function LingTestPage() {
 
     setIsSoundLoading(sound);
     try {
-      const soundInfo = LING_SIX_SOUNDS.find((s) => s.sound === sound);
-      if (!soundInfo) return;
+      let prompt = '';
+      if (type === 'ling') {
+        const soundInfo = LING_SIX_SOUNDS.find((s) => s.sound === sound);
+        if (!soundInfo) return;
 
-      let prompt = `the sound "${sound}"`;
-      if (['a', 'i', 'u'].includes(sound)) {
-        prompt = `Produce the sound ${soundInfo.ipa}`;
+        if (['a', 'i', 'u'].includes(sound)) {
+          prompt = `Produce the sound ${soundInfo.ipa}`;
+        } else {
+          prompt = `the sound "${sound}"`;
+        }
+      } else {
+        // Descriptive prompts for environmental sounds
+        if (sound === 'Bell') prompt = 'a clear bell ringing sound for 2 seconds';
+        if (sound === 'Rattle') prompt = 'a clear baby rattle sound for 2 seconds';
+        if (sound === 'Claps') prompt = 'the sound of hands clapping twice';
       }
-      
+
       const result = await getAudio(prompt);
       if (result.success && result.media) {
         setAudioCache((prev) => ({ ...prev, [sound]: result.media! }));
         const audio = new Audio(result.media);
         audio.play();
       } else {
-        toast({
-          variant: 'destructive',
-          title: 'Audio Error',
-          description: 'Could not play sound.',
-        });
+        throw new Error(result.error || 'Could not play sound.');
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Audio Error',
-        description: 'Could not play sound.',
+        description: error.message || 'Could not play sound.',
       });
     } finally {
       setIsSoundLoading(null);
@@ -242,7 +190,7 @@ export default function LingTestPage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-6">
-             <h3 className="text-lg font-medium text-primary">Ling-6 Sounds</h3>
+            <h3 className="text-lg font-medium text-primary">Ling-6 Sounds</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {LING_SIX_SOUNDS.map(({ sound, ipa, description }) => (
                 <Card
@@ -259,7 +207,7 @@ export default function LingTestPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => playLingSound(sound)}
+                    onClick={() => playSound(sound, 'ling')}
                     className="mt-4"
                     disabled={!isClient || isSoundLoading !== null}
                   >
@@ -274,33 +222,35 @@ export default function LingTestPage() {
             </div>
 
             <Separator />
-             <h3 className="text-lg font-medium text-primary">Environmental Sounds</h3>
+            <h3 className="text-lg font-medium text-primary">
+              Environmental Sounds
+            </h3>
 
-             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {ENVIRONMENTAL_SOUNDS.map(({ name, icon }) => {
-                 const Icon = iconMap[icon];
+                const Icon = iconMap[icon];
                 return (
-                <Card
-                  key={name}
-                  className="flex flex-col items-center justify-center p-4 text-center"
-                >
-                  <Icon className="h-10 w-10 text-primary" />
-                  <p className="text-lg font-medium mt-2">{name}</p>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => playEnvironmentalSound(name)}
-                    className="mt-4"
-                    disabled={!isClient || isSoundLoading !== null}
+                  <Card
+                    key={name}
+                    className="flex flex-col items-center justify-center p-4 text-center"
                   >
-                    {isSoundLoading === name ? (
-                      <Loader2 className="h-6 w-6 animate-spin" />
-                    ) : (
-                      <Volume2 className="h-6 w-6" />
-                    )}
-                  </Button>
-                </Card>
-                )
+                    <Icon className="h-10 w-10 text-primary" />
+                    <p className="text-lg font-medium mt-2">{name}</p>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => playSound(name, 'environmental')}
+                      className="mt-4"
+                      disabled={!isClient || isSoundLoading !== null}
+                    >
+                      {isSoundLoading === name ? (
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                      ) : (
+                        <Volume2 className="h-6 w-6" />
+                      )}
+                    </Button>
+                  </Card>
+                );
               })}
             </div>
 
