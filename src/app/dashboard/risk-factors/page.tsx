@@ -125,7 +125,7 @@ export default function RiskFactorsPage() {
                               />
                             </FormControl>
                             <FormLabel className="font-normal text-muted-foreground leading-snug">
-                              {factor}
+                              <span dangerouslySetInnerHTML={{ __html: factor }} />
                             </FormLabel>
                           </FormItem>
                         )}

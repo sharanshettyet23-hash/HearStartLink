@@ -1,55 +1,53 @@
 
 
-
-
 export const HIGH_RISK_FACTORS = [
   {
     category: 'Family and Genetic History',
     factors: [
-      'Parents are blood relatives (consanguineous marriage).',
-      'There is a family history of childhood hearing loss.',
+      'Parents are <strong>blood relatives</strong> (consanguineous marriage).',
+      'There is a family history of <strong>childhood hearing loss</strong>.',
       'The child has a known genetic condition or syndrome linked to hearing loss (e.g., Waardenburg, Pendred, BOR syndrome).',
     ],
   },
   {
     category: 'During Pregnancy',
     factors: [
-      'The mother had a serious illness or high fever during pregnancy.',
-      'The mother took medications known to affect hearing (such as aminoglycosides).',
-      'The mother consumed alcohol or tobacco during pregnancy.',
-      'There was an attempt to terminate the pregnancy.',
-      'In utero infections such as CMV, herpes, rubella, syphilis, toxoplasmosis, Zika.',
-      'The mother had high blood pressure during pregnancy or delivery.',
+      'The mother had a <strong>serious illness</strong> or high fever during pregnancy.',
+      'The mother took <strong>medications known to affect hearing</strong> (such as aminoglycosides).',
+      'The mother consumed <strong>alcohol or tobacco</strong> during pregnancy.',
+      'There was an attempt to <strong>terminate the pregnancy</strong>.',
+      '<strong>In utero infections</strong> such as CMV, herpes, rubella, syphilis, toxoplasmosis, Zika.',
+      'The mother had <strong>high blood pressure</strong> during pregnancy or delivery.',
     ],
   },
   {
     category: 'At Birth',
     factors: [
-      'The baby was born before 36 weeks of pregnancy (premature).',
-      "The baby's birth weight was low, especially below 1500 grams.",
-      'The baby did not cry immediately after birth.',
-      'The baby had jaundice that required special treatment (phototherapy or exchange transfusion).',
-      'NICU stay of more than 5 days.',
-      'Assisted ventilation including CPAP, ECMO.',
-      'The delivery was complicated (breech, prolonged, or difficult labor).',
+      'The baby was born <strong>before 36 weeks</strong> of pregnancy (premature).',
+      "The baby's birth weight was <strong>low, especially below 1500 grams</strong>.",
+      'The baby <strong>did not cry immediately</strong> after birth.',
+      'The baby had <strong>jaundice</strong> that required special treatment (phototherapy or exchange transfusion).',
+      '<strong>NICU stay of more than 5 days</strong>.',
+      '<strong>Assisted ventilation</strong> including CPAP, ECMO.',
+      'The delivery was <strong>complicated</strong> (breech, prolonged, or difficult labor).',
     ],
   },
   {
     category: 'Physical and Structural Indicators',
     factors: [
-      'Craniofacial anomalies, including those involving the pinna, ear canal, ear tags, ear pits, and temporal bone anomalies.',
-      'The baby was born with abnormalities in the head, ears, eyes, lips, or face.',
-      'The child shows features of a syndrome that may be associated with hearing problems.',
+      '<strong>Craniofacial anomalies</strong>, including those involving the pinna, ear canal, ear tags, ear pits, and temporal bone anomalies.',
+      'The baby was born with <strong>abnormalities in the head, ears, eyes, lips, or face</strong>.',
+      'The child shows features of a <strong>syndrome</strong> that may be associated with hearing problems.',
     ],
   },
   {
     category: 'Health Conditions After Birth',
     factors: [
-      'The child had bacterial meningitis or brain infections (e.g., encephalitis).',
-      'The child had illnesses like measles or mumps.',
-      'The child had a head injury with unconsciousness, bleeding, or discharge from the ear.',
-      'The child has had repeated ear infections lasting more than 3 months.',
-      'The child underwent advanced treatments like ECMO (heart-lung bypass machine).',
+      'The child had <strong>bacterial meningitis</strong> or brain infections (e.g., encephalitis).',
+      'The child had illnesses like <strong>measles or mumps</strong>.',
+      'The child had a <strong>head injury</strong> with unconsciousness, bleeding, or discharge from the ear.',
+      'The child has had repeated <strong>ear infections</strong> lasting more than 3 months.',
+      'The child underwent advanced treatments like <strong>ECMO</strong> (heart-lung bypass machine).',
     ],
   },
 ];
