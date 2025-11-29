@@ -1,5 +1,15 @@
 
 export const HIGH_RISK_FACTORS = [
+  'Parents are blood relatives (consanguineous marriage)',
+  'There is a family history of childhood hearing loss',
+  'The child has a known genetic condition or syndrome linked to hearing loss (e.g., Waardenburg, Pendred, BOR syndrome)',
+  'The mother had a serious illness or high fever during pregnancy',
+  'The mother took medications known to affect hearing (such as aminoglycosides)',
+  'The mother consumed alcohol or tobacco during pregnancy',
+  'There was an attempt to terminate the pregnancy',
+  'The mother had infections like rubella, cytomegalovirus (CMV), syphilis, toxoplasmosis, herpes, or Zika virus during pregnancy',
+  'The mother had high blood pressure during pregnancy or delivery',
+  'The baby was born before 36 weeks of pregnancy (premature)',
   'Family history of permanent childhood hearing loss',
   'NICU stay of more than 5 days',
   'In utero infections (e.g., CMV, herpes, rubella)',
