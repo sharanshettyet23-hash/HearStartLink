@@ -108,25 +108,9 @@ export default function LingTestPage() {
     try {
       let prompt = '';
       if (type === 'ling') {
-        switch (sound) {
-          case 'a':
-            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="ɑ"></phoneme></speak>`;
-            break;
-          case 'u':
-            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="u"></phoneme></speak>`;
-            break;
-          case 'i':
-            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="i"></phoneme></speak>`;
-            break;
-          case 'm':
-            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="m"></phoneme></speak>`;
-            break;
-          case 's':
-            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="s"></phoneme></speak>`;
-            break;
-          case 'sh':
-            prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="ʃ"></phoneme></speak>`;
-            break;
+        const lingSound = LING_SIX_SOUNDS.find(s => s.sound === sound);
+        if (lingSound) {
+           prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="${lingSound.ipa.replace(/\//g, '')}"></phoneme></speak>`;
         }
       } else {
         if (sound === 'Bell') prompt = 'Sound: A single clear temple bell ring.';
