@@ -1,6 +1,7 @@
 
 
 
+
 export const HIGH_RISK_FACTORS = [
   {
     category: 'Family and Genetic History',
@@ -55,35 +56,42 @@ export const HIGH_RISK_FACTORS = [
 
 export const AUDITORY_MILESTONES = [
   {
-    ageGroup: '0-3 Months',
+    ageGroup: 'Birth to 3 Months',
     milestones: [
-      'Startles at loud noises',
-      'Wakes up or stirs at loud sounds',
-      'Responds to your voice by smiling or cooing',
-      'Calms down at a familiar voice',
+      'Arousal from the sleep',
+      'In a very quiet environment eye -blink or eye-widening response to soft sounds from noise makers.',
+      'Quiets or smiles when you talk.',
+      'Makes sounds back and forth with you.',
+      'Makes sounds that differ depending on whether they are happy or upset.',
+      'Coos makes sounds like ooooo, aahh, and mmmmm.',
+      'Turns head or moves eyes in response to sound – May briefly turn toward a sound, especially familiar voices.',
+      'Recognizes and responds to familiar voices – Prefers the sound of their mother’s voice over others.',
     ],
   },
   {
-    ageGroup: '4-6 Months',
+    ageGroup: '4 to 6 Months',
     milestones: [
-      'Follows sounds with their eyes',
-      'Responds to changes in the tone of your voice',
-      'Notices toys that make sounds',
-      'Pays attention to music',
-      'Babbles in a speech-like way and uses many different sounds, including p, b and m',
+      'At 3 to 4 months of age, the infant may begin to show a slow head turn toward a sound source.',
+      'By the 4 months the infant begins to turn his or her head towards the sound source in a more consistent, but still wobble, manner.',
+      'Giggles and laughs.',
+      'Enjoys music and rhythmic sounds – Shows excitement or calms down when listening to music.',
+      'Look at objects of interest and follow objects with their eyes.',
+      'Reacts to toys that make sounds, like those with bells or music.',
+      'Vocalizes during play or with objects in the mouth.',
+      'Vocalizes different vowel sounds—sometimes combined with a consonant—like uuuuuummm, aaagoo, or daaa.',
     ],
   },
   {
-    ageGroup: '7-12 Months',
+    ageGroup: '7 to 9 Months',
     milestones: [
-      'Enjoys games like peek-a-boo and pat-a-cake',
-      'Turns and looks in the direction of sounds',
-      'Listens when spoken to',
-      'Understands words for common items and people',
-      'Starts to respond to simple requests',
-      'Babbles with changes in tone',
-      'Says "ma-ma" or "da-da"',
-      'Imitates speech sounds',
+      'By 7 months, the child can localize to side sounds',
+      'Between 7 and 9 months, the infant begin to identify the precise location of the sound source with direct head turn (can localize to the side and directly below)',
+      'Looks at you when you call their name.',
+      'Stops for a moment when you say, “No.”',
+      'Babbles long strings of sounds, like mama, upup, or baba',
+      'Enjoys interactive sound-based games – Reacts to games like peek-a-boo or pat-a-cake.',
+      'Recognizes the names of some people and objects.',
+      'Shows preference for certain sounds – Expresses excitement for favourite songs or familiar voices.',
     ],
   },
   {
@@ -93,10 +101,10 @@ export const AUDITORY_MILESTONES = [
       'By the end of 13 months of age, the infant is able to localizes to side and below in any plane above or below eye level',
       'By age 10 months, reaches for objects.',
       'Points, waves, and shows or gives objects.',
-      'Uses gestures along with sounds - Waves "bye-bye" or raises arms to be picked up.',
+      'Uses gestures along with sounds – Waves “bye-bye” or raises arms to be picked up.',
       'Tries to copy sounds that you make.',
       'Enjoys dancing.',
-      'Shows understanding of common phrases - Reacts appropriately to "no" or "want more?"',
+      'Shows understanding of common phrases – Reacts appropriately to “no” or “want more?”',
       'Says one or two words—like mama, dada, hi, and bye.',
     ],
   },
@@ -104,9 +112,9 @@ export const AUDITORY_MILESTONES = [
     ageGroup: '13 to 16 Months',
     milestones: [
       'Localize to side, below, and indirectly above.',
-      'Understands and follows simple instructions - Responds to basic requests like "come here" or "give me the ball."',
-      'Recognizes and points to familiar objects when named - Can identify everyday items like "shoe," "cup," or "dog."',
-      'Imitates sounds and simple words - Tries to repeat new words heard in conversation.',
+      'Understands and follows simple instructions – Responds to basic requests like “come here” or “give me the ball.”',
+      'Recognizes and points to familiar objects when named – Can identify everyday items like “shoe,” “cup,” or “dog.”',
+      'Imitates sounds and simple words – Tries to repeat new words heard in conversation.',
     ],
   },
   {
@@ -116,7 +124,6 @@ export const AUDITORY_MILESTONES = [
       'Recognize names of familiar people, objects, and body parts.',
       'Follow simple directions accompanied by gestures.',
       'Say as many as 10 words.',
-      'Points to a picture in a book when named',
     ],
   },
   {
@@ -128,7 +135,6 @@ export const AUDITORY_MILESTONES = [
       'Follow simple commands and understand simple questions.',
       'Speak about 50 or more words.',
       'Speak well enough to be understood at least half the time by parents and other primary caregivers.',
-      'Points to objects or pictures when they are named in a book',
     ],
   },
 ];
