@@ -112,15 +112,20 @@ export default function LingTestPage() {
         if (!soundInfo) return;
 
         if (['a', 'i', 'u'].includes(sound)) {
-          prompt = `Produce the sound ${soundInfo.ipa}`;
+          prompt = `Produce the vowel sound ${soundInfo.ipa}`;
         } else {
-          prompt = `the sound "${sound}"`;
+          prompt = `Produce the consonant sound '${sound}'`;
         }
       } else {
-        // Descriptive prompts for environmental sounds
-        if (sound === 'Bell') prompt = 'a clear temple bell ringing sound for 2 seconds';
-        if (sound === 'Rattle') prompt = 'the sound of people playing with a baby rattle for 2 seconds';
-        if (sound === 'Claps') prompt = 'the sound of people clapping for 2 seconds';
+        if (sound === 'Bell')
+          prompt =
+            'Generate a clear, crisp single bell ring. The sound should be bright, metallic, and last about 1 second. No echo, no ambient noise, no background sound—just a clean bell ding.';
+        if (sound === 'Rattle')
+          prompt =
+            'Generate a soft plastic rattle shaking sound. It should last around 1 second and have a light, crisp rattling texture. No background noise, no metallic elements, only a clean plastic rattle shake.';
+        if (sound === 'Claps')
+          prompt =
+            'Generate a short burst of two natural human hand claps. The claps should be sharp, realistic, and slightly spaced by 0.2 seconds. No background noise, no echo, no audience, only clean clap sounds.';
       }
 
       const result = await getAudio(prompt);
