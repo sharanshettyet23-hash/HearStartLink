@@ -108,14 +108,20 @@ export default function LingTestPage() {
     try {
       let prompt = '';
       if (type === 'ling') {
-        const lingSound = LING_SIX_SOUNDS.find(s => s.sound === sound);
+        const lingSound = LING_SIX_SOUNDS.find((s) => s.sound === sound);
         if (lingSound) {
-           prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="${lingSound.ipa.replace(/\//g, '')}"></phoneme></speak>`;
+          prompt = `Phoneme: <speak><phoneme alphabet="ipa" ph="${lingSound.ipa.replace(
+            /\//g,
+            ''
+          )}"></phoneme></speak>`;
         }
       } else {
-        if (sound === 'Bell') prompt = 'Sound: A single clear temple bell ring.';
-        if (sound === 'Rattle') prompt = 'Sound: A baby rattle shaking.';
-        if (sound === 'Claps') prompt = 'Sound: Two hands clapping.';
+        if (sound === 'Bell')
+          prompt = 'Sound: Generate a clear, crisp single temple bell ring.';
+        if (sound === 'Rattle')
+          prompt = 'Sound: Generate a soft plastic rattle shaking sound.';
+        if (sound === 'Claps')
+          prompt = 'Sound: Generate a short burst of two natural human hand claps.';
       }
 
       if (!prompt) {
