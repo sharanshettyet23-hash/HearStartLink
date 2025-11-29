@@ -108,13 +108,36 @@ export default function LingTestPage() {
     try {
       let prompt = '';
       if (type === 'ling') {
-        const soundInfo = LING_SIX_SOUNDS.find((s) => s.sound === sound);
-        if (!soundInfo) return;
-        prompt = `The sound '${sound}' ${soundInfo.description}`;
+        switch (sound) {
+          case 'a':
+            prompt = "The sound 'ah'";
+            break;
+          case 'u':
+            prompt = "The sound 'oo'";
+            break;
+          case 'i':
+            prompt = "The sound 'ee'";
+            break;
+          case 'm':
+            prompt = 'The sound mmm';
+            break;
+          case 's':
+            prompt = 'The sound sss';
+            break;
+          case 'sh':
+            prompt = 'The sound shh';
+            break;
+          default:
+            prompt = sound;
+        }
       } else {
-        if (sound === 'Bell') prompt = 'A single, clear bell ring.';
-        if (sound === 'Rattle') prompt = 'The sound of a plastic baby rattle.';
-        if (sound === 'Claps') prompt = 'The sound of two hands clapping.';
+        if (sound === 'Bell') prompt = 'bell';
+        if (sound === 'Rattle') prompt = 'rattle';
+        if (sound === 'Claps') prompt = 'clapping';
+      }
+
+      if (!prompt) {
+        throw new Error('Invalid sound selected.');
       }
 
       const result = await getAudio(prompt);
