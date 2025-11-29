@@ -1,6 +1,7 @@
 
 
 
+
 export const HIGH_RISK_FACTORS = [
   {
     category: 'Family and Genetic History',
@@ -46,13 +47,9 @@ export const HIGH_RISK_FACTORS = [
     factors: [
       'The child had bacterial meningitis or brain infections (e.g., encephalitis).',
       'The child had illnesses like measles or mumps.',
-      'Head trauma, especially basal skull or temporal bone fracture requiring hospitalization.',
+      'The child had a head injury with unconsciousness, bleeding, or discharge from the ear.',
       'The child has had repeated ear infections lasting more than 3 months.',
-      'Exposure to ototoxic medications (e.g., gentamycin, tobramycin) or loop diuretics (e.g., furosemide).',
-      'Hyperbilirubinemia requiring exchange transfusion.',
-      'Neurodegenerative disorders.',
-      'Culture-positive postnatal infections associated with sensorineural hearing loss (e.g., bacterial and viral meningitis).',
-      'Chemotherapy.',
+      'The child underwent advanced treatments like ECMO (heart-lung bypass machine).',
     ],
   },
 ];
