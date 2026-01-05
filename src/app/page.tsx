@@ -54,6 +54,7 @@ export default function AuthenticationPage() {
             data-ai-hint={heroImage.imageHint}
             fill
             className="object-cover"
+            priority
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

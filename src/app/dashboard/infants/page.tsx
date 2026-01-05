@@ -9,7 +9,6 @@ import {
   query,
   where,
   onSnapshot,
-  DocumentData,
 } from 'firebase/firestore';
 import {
   Card,
@@ -30,7 +29,11 @@ import {
   DialogTrigger,
   DialogFooter,
   DialogClose,
+  DialogDescription,
 } from '@/components/ui/dialog';
+import { useRouter } from 'next/navigation';
+import { useInfant } from '@/hooks/use-infant';
+import { cn } from '@/lib/utils';
 
 interface Infant {
   id: string;
@@ -40,6 +43,8 @@ interface Infant {
 export default function InfantsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
+  const { selectedInfant, setSelectedInfant } = useInfant();
   const [infants, setInfants] = useState<Infant[]>([]);
   const [newInfantName, setNewInfantName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,10 +67,11 @@ export default function InfantsPage() {
         setIsFetching(false);
       },
       (error) => {
+        console.error('Error fetching infants: ', error);
         toast({
           variant: 'destructive',
           title: 'Error',
-          description: 'Failed to fetch infants.',
+          description: 'Failed to fetch infants. Please try again.',
         });
         setIsFetching(false);
       }
@@ -96,16 +102,22 @@ export default function InfantsPage() {
         description: `${newInfantName} has been added successfully.`,
       });
       setNewInfantName('');
-      setIsDialogOpen(false); // Close dialog on success
+      setIsDialogOpen(false);
     } catch (error) {
+      console.error('Error adding infant: ', error);
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to add infant.',
+        description: 'Failed to add infant. Please try again.',
       });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSelectInfant = (infant: Infant) => {
+    setSelectedInfant(infant);
+    router.push('/dashboard');
   };
 
   const renderContent = () => {
@@ -121,9 +133,18 @@ export default function InfantsPage() {
       return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {infants.map((infant) => (
-            <Card key={infant.id} className="p-4 flex items-center justify-between">
+            <Card
+              key={infant.id}
+              className={cn(
+                'p-4 flex items-center justify-between cursor-pointer',
+                selectedInfant?.id === infant.id && 'border-primary'
+              )}
+              onClick={() => handleSelectInfant(infant)}
+            >
               <span className="font-medium">{infant.name}</span>
-              <Button variant="outline" size="sm">Select</Button>
+              <Button variant="outline" size="sm">
+                {selectedInfant?.id === infant.id ? 'Selected' : 'Select'}
+              </Button>
             </Card>
           ))}
         </div>
@@ -134,7 +155,7 @@ export default function InfantsPage() {
       <div className="text-center py-12 border-2 border-dashed rounded-lg">
         <h3 className="text-lg font-medium text-muted-foreground">No infants found</h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Click 'Add Infant' to get started.
+          Click the &quot;Add Infant&quot; button to get started.
         </p>
       </div>
     );
@@ -144,10 +165,10 @@ export default function InfantsPage() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-            <CardTitle>Manage Infants</CardTitle>
-            <CardDescription>
+          <CardTitle>Manage Infants</CardTitle>
+          <CardDescription>
             Add a new infant or select one to view their dashboard.
-            </CardDescription>
+          </CardDescription>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
@@ -158,31 +179,31 @@ export default function InfantsPage() {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Add New Infant</DialogTitle>
+              <DialogDescription>
+                Enter the name of the new infant to add them to your profile.
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <Input
+                id="name"
                 placeholder="Infant's Name"
                 value={newInfantName}
                 onChange={(e) => setNewInfantName(e.target.value)}
               />
             </div>
             <DialogFooter>
-              <DialogClose asChild>
-                 <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button onClick={handleAddInfant} disabled={isLoading}>
-                {isLoading && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Save
-              </Button>
+                <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button onClick={handleAddInfant} disabled={isLoading}>
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Save
+                </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </CardHeader>
-      <CardContent>
-        {renderContent()}
-      </CardContent>
+      <CardContent>{renderContent()}</CardContent>
     </Card>
   );
 }

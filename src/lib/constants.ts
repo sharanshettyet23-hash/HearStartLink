@@ -149,7 +149,7 @@ export const LING_SIX_SOUNDS = [
 ];
 
 export const ENVIRONMENTAL_SOUNDS = [
-  { name: 'Bell', icon: 'BellRing' },
-  { name: 'Rattle', icon: 'ToyBrick' },
-  { name: 'Claps', icon: 'Hand' },
+  { name: 'Bell', icon: 'BellRing', src: '/audio/ling6/bell.mp3' },
+  { name: 'Rattle', icon: 'ToyBrick', src: '/audio/ling6/rattle.mp3' },
+  { name: 'Claps', icon: 'Hand', src: '/audio/ling6/claps.mp3' },
 ];

@@ -42,33 +42,31 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuPortal,
-  DropdownMenuSubContent
+  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 import { auth } from '@/lib/firebase';
 import { useAuth } from '@/hooks/use-auth';
 import { AppLogo } from '@/components/icons';
 import { useTheme } from 'next-themes';
+import { InfantProvider, useInfant } from '@/hooks/use-infant';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/dashboard/infants', icon: Users, label: 'Manage Infants'},
+  { href: '/dashboard/infants', icon: Users, label: 'Manage Infants' },
   { href: '/dashboard/profile', icon: Baby, label: 'Infant Profile' },
   { href: '/dashboard/screening', icon: ClipboardCheck, label: 'Screening' },
-  { href: '/dashboard/milestones', icon: ListChecks, label: 'Milestones' },
-  { href: '/dashboard/ling-test', icon: Ear, label: 'Ling-6 Test' },
   { href: '/dashboard/risk-factors', icon: AlertTriangle, label: 'Risk Factors' },
+  { href: '/dashboard/ling-test', icon: Ear, label: 'Ling-6 Test' },
+  { href: '/dashboard/milestones', icon: ListChecks, label: 'Milestones' },
   { href: '/dashboard/reports', icon: FileText, label: 'Reports' },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useAuth();
   const { setTheme } = useTheme();
+  const { selectedInfant } = useInfant();
 
   const handleSignOut = async () => {
     await firebaseSignOut(auth);
@@ -116,7 +114,14 @@ export default function DashboardLayout({
         <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
           <SidebarTrigger className="md:hidden" />
           <div className="w-full flex-1">
-            {/* Can add search or other header content here */}
+            {selectedInfant ? (
+              <div className="flex items-center gap-2">
+                <Baby className="h-6 w-6 text-primary" />
+                <span className="font-semibold text-lg">{selectedInfant.name}</span>
+              </div>
+            ) : (
+              <span className="text-muted-foreground">Select an Infant from the Manage Infants page.</span>
+            )}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -141,13 +146,13 @@ export default function DashboardLayout({
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem onClick={() => setTheme("light")}>
+                    <DropdownMenuItem onClick={() => setTheme('light')}>
                       Light
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    <DropdownMenuItem onClick={() => setTheme('dark')}>
                       Dark
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("system")}>
+                    <DropdownMenuItem onClick={() => setTheme('system')}>
                       System
                     </DropdownMenuItem>
                   </DropdownMenuSubContent>
@@ -161,5 +166,13 @@ export default function DashboardLayout({
         <main className="flex-1 p-4 sm:p-6">{children}</main>
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <InfantProvider>
+      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </InfantProvider>
   );
 }

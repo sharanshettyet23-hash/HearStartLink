@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,9 +21,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { getRecommendations } from '@/lib/actions';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, Sparkles, BellRing } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -40,17 +39,88 @@ const screeningSchema = z.object({
 
 type ScreeningFormValues = z.infer<typeof screeningSchema>;
 
+// Guidance Card Component
+function GuidanceCard({ status }: { status: ScreeningFormValues['screeningStatus'] }) {
+  const router = useRouter();
+  const [milestoneChoice, setMilestoneChoice] = useState<'achieved' | 'not-achieved' | null>(null);
+
+  const handleNavigate = () => {
+    router.push('/dashboard/reports'); // Navigate to the referral page
+  };
+
+  const renderContent = () => {
+    switch (status) {
+      case 'Passed':
+        return (
+          <ul className="list-disc list-inside space-y-2">
+            <li>Monitor developmental milestones (speech, language, auditory).</li>
+            <li>Schedule Screening for Auditory, Speech & Language Evaluation at 1.5 years.</li>
+          </ul>
+        );
+      case 'Referred':
+        return (
+          <ul className="list-disc list-inside space-y-2">
+            <li>Check the high-risk register.</li>
+            <li>Repeat hearing screening after 1 month (during vaccination visit).</li>
+            <li>If repeat screening is PASS → continue milestone monitoring.</li>
+            <li>If repeat screening is FAIL → immediately refer to an audiologist for diagnostic evaluation.</li>
+            <li>Schedule Screening for Auditory, Speech & Language Evaluation at 1.5 years.</li>
+          </ul>
+        );
+      case 'Not Yet Screened':
+        return (
+          <div>
+            <p className="font-bold">Step 1: Check the high-risk register.</p>
+            <p className="font-bold mt-2">Step 2: Monitor developmental milestones and perform Ling Six Sound Check.</p>
+            
+            <div className="mt-4 border-t border-purple-400 pt-4">
+              <p className="font-semibold mb-2">Based on your observation:</p>
+              {milestoneChoice === 'achieved' ? (
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Schedule Auditory, Speech & Language Evaluation at 1.5 years.</li>
+                </ul>
+              ) : milestoneChoice === 'not-achieved' ? (
+                <div>
+                  <ul className="list-disc list-inside space-y-2">
+                    <li>Immediately refer to an audiologist.</li>
+                  </ul>
+                  <Button onClick={handleNavigate} className="mt-4 bg-white text-purple-700 hover:bg-gray-200">
+                    Go to Referral Section
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-2 mt-2">
+                  <Button onClick={() => setMilestoneChoice('achieved')} className="bg-purple-500 hover:bg-purple-400 border border-white">Milestones Achieved & Responds to Ling Sounds</Button>
+                  <Button onClick={() => setMilestoneChoice('not-achieved')} className="bg-purple-500 hover:bg-purple-400 border border-white">Milestones Not Achieved / Suspect Hearing Loss</Button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Card className="bg-purple-700 text-white rounded-lg">
+      <CardHeader>
+        <CardTitle>Guidance</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {renderContent()}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function ScreeningPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
-  const [recommendations, setRecommendations] = useState<{
-    text: string;
-    reminder: boolean;
-  } | null>(null);
   const [ageInMonths, setAgeInMonths] = useState<number | null>(null);
-  const [riskFactors, setRiskFactors] = useState<string[]>([]);
+  const [savedStatus, setSavedStatus] = useState<ScreeningFormValues['screeningStatus'] | null>(null);
 
   const form = useForm<ScreeningFormValues>({
     resolver: zodResolver(screeningSchema),
@@ -73,10 +143,6 @@ export default function ScreeningPage() {
       if (screeningSnap.exists()) {
         const data = screeningSnap.data();
         form.reset({ screeningStatus: data.screeningStatus });
-        setRiskFactors(data.riskFactors ?? []);
-        if (data.recommendations) {
-           setRecommendations({ text: data.recommendations, reminder: data.reminderNeeded });
-        }
       }
     } catch (e) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to load data.' });
@@ -90,46 +156,27 @@ export default function ScreeningPage() {
   }, [fetchScreeningData]);
 
   async function onSubmit(values: ScreeningFormValues) {
-    if (!user || ageInMonths === null) {
+    if (!user) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Infant profile and age are required.',
+        description: 'You must be logged in to save screening status.',
       });
       return;
     }
     setIsLoading(true);
-    setRecommendations(null);
 
     try {
-      const result = await getRecommendations({
-        screeningStatus: values.screeningStatus as 'Passed' | 'Referred' | 'Not Yet Screened',
-        ageInMonths: ageInMonths,
-        riskFactors: riskFactors,
-      });
-
-      if (result.success && result.data) {
-        setRecommendations({
-          text: result.data.recommendations,
-          reminder: result.data.reminderNeeded,
-        });
-
-        // Save to Firestore
-        await setDoc(doc(db, 'screenings', user.uid), {
-          screeningStatus: values.screeningStatus,
-          riskFactors: riskFactors,
-          userId: user.uid,
-          lastUpdated: new Date().toISOString(),
-          recommendations: result.data.recommendations,
-          reminderNeeded: result.data.reminderNeeded,
-        }, { merge: true });
-        
-        toast({ title: 'Success', description: 'Recommendations generated.' });
-      } else {
-        throw new Error(result.error);
-      }
+      await setDoc(doc(db, 'screenings', user.uid), {
+        screeningStatus: values.screeningStatus,
+        userId: user.uid,
+        lastUpdated: new Date().toISOString(),
+      }, { merge: true });
+      
+      toast({ title: 'Success', description: 'Screening status saved.' });
+      setSavedStatus(values.screeningStatus); // Show guidance card on successful save
     } catch (error) {
-      toast({ variant: 'destructive', title: 'AI Error', description: 'Could not get recommendations.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not save screening status.' });
     } finally {
       setIsLoading(false);
     }
@@ -149,15 +196,14 @@ export default function ScreeningPage() {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="grid gap-6 md:grid-cols-1">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
               <CardTitle>Hearing Screening</CardTitle>
               <CardDescription>
-                Record the latest screening status to receive personalized guidance. 
-                Manage risk factors in the 'Risk Factors' section.
+                Record the latest screening status.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
@@ -169,7 +215,10 @@ export default function ScreeningPage() {
                     <FormLabel>Screening Status</FormLabel>
                     <FormControl>
                       <RadioGroup
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setSavedStatus(null); // Hide card when selection changes
+                        }}
                         defaultValue={field.value}
                         className="flex flex-col space-y-1"
                       >
@@ -203,50 +252,14 @@ export default function ScreeningPage() {
             <CardFooter>
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Get Recommendations
+                Save Status
               </Button>
             </CardFooter>
           </Card>
         </form>
       </Form>
 
-      <div className="space-y-6">
-        <Card className="bg-secondary">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="text-character" />
-              AI Recommendations
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading && (
-              <div className="flex items-center space-x-2 text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Generating personalized advice...</span>
-              </div>
-            )}
-            {!isLoading && !recommendations && (
-              <p className="text-muted-foreground">
-                Submit the form to generate AI-powered recommendations.
-              </p>
-            )}
-            {recommendations && (
-              <div className="space-y-4">
-                <p className="whitespace-pre-wrap">{recommendations.text}</p>
-                {recommendations.reminder && (
-                  <Alert>
-                    <BellRing className="h-4 w-4" />
-                    <AlertTitle>Reminder Suggested</AlertTitle>
-                    <AlertDescription>
-                      A follow-up screening is recommended. We'll remind you.
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+      {savedStatus && <GuidanceCard status={savedStatus} />}
     </div>
   );
 }
