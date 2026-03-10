@@ -37,7 +37,7 @@ export default function MilestonesPage() {
   const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
 
   const totalMilestones = AUDITORY_MILESTONES.reduce(
-    (sum, group) => sum + group.milestones.length,
+    (sum, group) => sum + group.milestones.length + (group.speechMilestones?.length ?? 0),
     0
   );
   const progress =
@@ -176,7 +176,8 @@ export default function MilestonesPage() {
             {currentGroupIndex < totalGroups ? (
                 <div key={currentGroup.ageGroup}>
                     <h3 className="text-lg font-medium text-primary mb-4">{currentGroup.ageGroup}</h3>
-                    <div className="space-y-4 pl-2">
+                    <h4 className="text-md font-semibold text-foreground mb-3">Auditory Milestones</h4>
+                    <div className="space-y-4 pl-2 mb-6">
                     {currentGroup.milestones.map((milestone) => (
                         <div key={milestone} className="flex items-center space-x-3">
                         <Checkbox
@@ -193,6 +194,28 @@ export default function MilestonesPage() {
                         </div>
                     ))}
                     </div>
+                    {currentGroup.speechMilestones && currentGroup.speechMilestones.length > 0 && (
+                      <>
+                        <h4 className="text-md font-semibold text-foreground mb-3">Speech and Language Milestones</h4>
+                        <div className="space-y-4 pl-2">
+                        {currentGroup.speechMilestones.map((milestone) => (
+                            <div key={milestone} className="flex items-center space-x-3">
+                            <Checkbox
+                                id={milestone}
+                                checked={completedMilestones.includes(milestone)}
+                                onCheckedChange={() => handleToggleMilestone(milestone)}
+                            />
+                            <Label
+                                htmlFor={milestone}
+                                className="text-sm font-normal leading-snug text-muted-foreground"
+                            >
+                                {milestone}
+                            </Label>
+                            </div>
+                        ))}
+                        </div>
+                      </>
+                    )}
                 </div>
             ) : (
                 <div>

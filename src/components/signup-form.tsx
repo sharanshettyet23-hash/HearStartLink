@@ -71,7 +71,6 @@ export function SignUpForm() {
       });
       // The AuthProvider will handle redirection
     } catch (error) {
-      console.error('Sign Up Error:', error);
       const firebaseError = error as FirebaseError;
       toast({
         variant: 'destructive',

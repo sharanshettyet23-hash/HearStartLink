@@ -42,6 +42,7 @@ const profileSchema = z.object({
   gender: z.enum(['Male', 'Female', 'Other']),
   guardianName: z.string().min(2, 'Guardian name is required.'),
   guardianContact: z.string().min(10, 'A valid contact number is required.'),
+  address: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -59,6 +60,7 @@ export default function ProfilePage() {
       gender: 'Male',
       guardianName: '',
       guardianContact: '',
+      address: '',
     },
   });
 
@@ -249,6 +251,19 @@ export default function ProfilePage() {
                     <FormLabel>Contact Number</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., (555) 123-4567" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., 123 Main St, City, State, ZIP" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

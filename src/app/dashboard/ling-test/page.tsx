@@ -62,6 +62,7 @@ export default function LingTestPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [isSoundLoading, setIsSoundLoading] = useState<string | null>(null);
+  const [responses, setResponses] = useState<Record<string, 'yes' | 'no' | null>>({});
 
   const form = useForm<LingTestFormValues>({
     resolver: zodResolver(lingTestSchema),
@@ -79,7 +80,11 @@ export default function LingTestPage() {
       const docRef = doc(db, 'ling_tests', user.uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        form.reset(docSnap.data());
+        const data = docSnap.data();
+        form.reset(data);
+        if (data.responses) {
+          setResponses(data.responses);
+        }
       }
     } catch (error) {
       toast({
@@ -142,7 +147,6 @@ export default function LingTestPage() {
       audioPlayer.src = audioSrc;
       setIsSoundLoading(soundName);
       audioPlayer.play().catch(err => {
-        console.error("Error playing audio:", err);
         toast({
           variant: 'destructive',
           title: 'Audio Error',
@@ -161,6 +165,7 @@ export default function LingTestPage() {
         doc(db, 'ling_tests', user.uid),
         {
           ...values,
+          responses,
           userId: user.uid,
           testDate: new Date().toISOString(),
         },
@@ -233,6 +238,28 @@ export default function LingTestPage() {
                       sound={sound as 'a' | 'u' | 'i' | 'm' | 's' | 'sh'}
                     />
                   </div>
+                  <div className="flex gap-2 mt-3">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={responses[sound] === 'yes' ? 'default' : 'outline'}
+                      className={responses[sound] === 'yes' ? 'bg-green-600 hover:bg-green-700' : ''}
+                      aria-label={`Responded to ${sound} sound`}
+                      onClick={() => setResponses(prev => ({ ...prev, [sound]: prev[sound] === 'yes' ? null : 'yes' }))}
+                    >
+                      Yes
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={responses[sound] === 'no' ? 'default' : 'outline'}
+                      className={responses[sound] === 'no' ? 'bg-red-600 hover:bg-red-700' : ''}
+                      aria-label={`No response to ${sound} sound`}
+                      onClick={() => setResponses(prev => ({ ...prev, [sound]: prev[sound] === 'no' ? null : 'no' }))}
+                    >
+                      No
+                    </Button>
+                  </div>
                 </Card>
               ))}
             </div>
@@ -265,6 +292,28 @@ export default function LingTestPage() {
                         <Volume2 className="h-6 w-6" />
                       )}
                     </Button>
+                    <div className="flex gap-2 mt-3">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={responses[name] === 'yes' ? 'default' : 'outline'}
+                        className={responses[name] === 'yes' ? 'bg-green-600 hover:bg-green-700' : ''}
+                        aria-label={`Responded to ${name} sound`}
+                        onClick={() => setResponses(prev => ({ ...prev, [name]: prev[name] === 'yes' ? null : 'yes' }))}
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={responses[name] === 'no' ? 'default' : 'outline'}
+                        className={responses[name] === 'no' ? 'bg-red-600 hover:bg-red-700' : ''}
+                        aria-label={`No response to ${name} sound`}
+                        onClick={() => setResponses(prev => ({ ...prev, [name]: prev[name] === 'no' ? null : 'no' }))}
+                      >
+                        No
+                      </Button>
+                    </div>
                   </Card>
                 );
               })}

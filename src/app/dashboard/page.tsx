@@ -39,6 +39,13 @@ const dashboardSections = [
     color: 'text-sky-500',
   },
   {
+    title: 'Risk Factors',
+    description: 'Identify and manage high-risk factors for hearing loss.',
+    icon: AlertTriangle,
+    href: '/dashboard/risk-factors',
+    color: 'text-rose-500',
+  },
+  {
     title: 'Screening',
     description: 'Log screening results and get AI-powered recommendations.',
     icon: ClipboardCheck,
@@ -58,13 +65,6 @@ const dashboardSections = [
     icon: Ear,
     href: '/dashboard/ling-test',
     color: 'text-indigo-500',
-  },
-  {
-    title: 'Risk Factors',
-    description: 'Identify and manage high-risk factors for hearing loss.',
-    icon: AlertTriangle,
-    href: '/dashboard/risk-factors',
-    color: 'text-rose-500',
   },
   {
     title: 'Reports',

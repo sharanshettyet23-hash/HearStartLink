@@ -67,7 +67,6 @@ export default function InfantsPage() {
         setIsFetching(false);
       },
       (error) => {
-        console.error('Error fetching infants: ', error);
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -104,7 +103,6 @@ export default function InfantsPage() {
       setNewInfantName('');
       setIsDialogOpen(false);
     } catch (error) {
-      console.error('Error adding infant: ', error);
       toast({
         variant: 'destructive',
         title: 'Error',

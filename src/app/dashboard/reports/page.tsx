@@ -11,11 +11,12 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { Loader2, User, Baby, ShieldCheck, Milestone, Mic, AlertTriangle } from 'lucide-react';
+import { Loader2, Baby, ShieldCheck, ListChecks, Ear, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 
 export default function ReportPage() {
   const { user } = useAuth();
@@ -72,90 +73,181 @@ export default function ReportPage() {
 
   return (
     <div className="space-y-6">
-       <Card>
-          <CardHeader>
-            <CardTitle>Comprehensive Infant Hearing Report</CardTitle>
-            <CardDescription>A complete summary of all recorded information.</CardDescription>
-          </CardHeader>
-        </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Comprehensive Infant Hearing Report</CardTitle>
+          <CardDescription>A complete summary of all recorded information.</CardDescription>
+        </CardHeader>
+      </Card>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Baby /> Infant Profile</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {profile ? (
-              <>
-                <p><strong>Name:</strong> {profile.name}</p>
-                <p><strong>Date of Birth:</strong> {profile.dob ? format(new Date(profile.dob), 'PPP') : 'N/A'}</p>
-                <p><strong>Gender:</strong> {profile.gender}</p>
-                 <Separator className="my-4" />
-                <p><strong>Guardian:</strong> {profile.guardianName}</p>
-                <p><strong>Contact:</strong> {profile.guardianContact}</p>
-              </>
-            ) : <p className="text-muted-foreground">No profile data available.</p>}
-          </CardContent>
-        </Card>
+      {/* Infant Profile */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Baby className="h-5 w-5 text-sky-500" /> Infant Profile
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {profile ? (
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium w-1/3">Name</TableCell>
+                  <TableCell>{profile.name}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Date of Birth</TableCell>
+                  <TableCell>{profile.dob ? format(new Date(profile.dob), 'PPP') : 'N/A'}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Gender</TableCell>
+                  <TableCell>{profile.gender}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Guardian</TableCell>
+                  <TableCell>{profile.guardianName}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Contact</TableCell>
+                  <TableCell>{profile.guardianContact}</TableCell>
+                </TableRow>
+                {profile.address && (
+                  <TableRow>
+                    <TableCell className="font-medium">Address</TableCell>
+                    <TableCell>{profile.address}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-muted-foreground text-sm">No profile data available.</p>
+          )}
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><ShieldCheck /> Screening & Risks</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-             {screening ? (
-              <>
-                <div className="flex items-center gap-2">
-                  <strong>Status:</strong> <Badge variant={screening.screeningStatus === 'Passed' ? 'default' : 'destructive'}>{screening.screeningStatus || 'N/A'}</Badge>
-                </div>
-                <div>
-                  <strong>High-Risk Factors:</strong>
-                  {screening.riskFactors && screening.riskFactors.length > 0 ? (
-                    <ul className="list-disc pl-5 mt-1 text-sm">
-                      {screening.riskFactors.map((factor: string) => <li key={factor}>{factor}</li>)}
-                    </ul>
-                  ) : <p className="text-sm text-muted-foreground">No risk factors identified.</p>}
-                </div>
-                 <Separator className="my-4" />
-                <div>
-                    <strong>AI Recommendation:</strong>
-                    <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{screening.recommendations || 'No recommendations generated yet.'}</p>
-                </div>
-              </>
-            ) : <p className="text-muted-foreground">No screening data available.</p>}
-          </CardContent>
-        </Card>
+      {/* Screening & Risk Factors */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <ShieldCheck className="h-5 w-5 text-teal-500" /> Screening Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {screening ? (
+            <>
+              <div className="flex items-center gap-3">
+                <span className="font-medium">Status:</span>
+                <Badge
+                  variant={screening.screeningStatus === 'Passed' ? 'default' : 'destructive'}
+                  className="text-sm"
+                >
+                  {screening.screeningStatus || 'N/A'}
+                </Badge>
+              </div>
+              <Separator />
+              <div>
+                <h4 className="font-medium mb-2">Identified Risk Factors</h4>
+                {screening.riskFactors && screening.riskFactors.length > 0 ? (
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                    {screening.riskFactors.map((factor: string) => (
+                      <li key={factor} dangerouslySetInnerHTML={{ __html: factor }} />
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No risk factors identified.</p>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-muted-foreground text-sm">No screening data available.</p>
+          )}
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Milestone /> Auditory Milestones</CardTitle>
-          </CardHeader>
-          <CardContent>
-             {milestones && milestones.completed?.length > 0 ? (
-                <ul className="list-disc pl-5 space-y-1">
-                  {milestones.completed.map((milestone: string) => <li key={milestone}>{milestone}</li>)}
-                </ul>
-              ) : <p className="text-muted-foreground">No completed milestones recorded.</p>}
-          </CardContent>
-        </Card>
+      {/* Auditory Milestones */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <ListChecks className="h-5 w-5 text-amber-500" /> Completed Milestones
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {milestones && milestones.completed?.length > 0 ? (
+            <>
+              <p className="text-sm text-muted-foreground mb-3">
+                {milestones.completed.length} milestone{milestones.completed.length !== 1 ? 's' : ''} achieved
+              </p>
+              <ul className="space-y-2">
+                {milestones.completed.map((milestone: string) => (
+                  <li key={milestone} className="flex items-start gap-2 text-sm">
+                    <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                    <span>{milestone}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p className="text-muted-foreground text-sm">No completed milestones recorded.</p>
+          )}
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Mic /> Ling-6 Sound Test</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {lingTest ? (
-              <>
-                <p><strong>Test Date:</strong> {lingTest.testDate ? format(new Date(lingTest.testDate), 'PPP') : 'N/A'}</p>
-                <div>
-                  <strong>Observations:</strong>
-                  <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{lingTest.observations || 'No observations recorded.'}</p>
-                </div>
-              </>
-            ) : <p className="text-muted-foreground">No Ling-6 test data available.</p>}
-          </CardContent>
-        </Card>
-      </div>
+      {/* Ling-6 Sound Test */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Ear className="h-5 w-5 text-indigo-500" /> Ling-6 Sound Test
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {lingTest ? (
+            <>
+              <div className="flex items-center gap-3">
+                <span className="font-medium">Test Date:</span>
+                <span className="text-sm">{lingTest.testDate ? format(new Date(lingTest.testDate), 'PPP') : 'N/A'}</span>
+              </div>
+              {lingTest.responses && Object.keys(lingTest.responses).length > 0 && (
+                <>
+                  <Separator />
+                  <div>
+                    <h4 className="font-medium mb-3">Sound Responses</h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {Object.entries(lingTest.responses).map(([sound, response]) => (
+                        <div
+                          key={sound}
+                          className={`flex items-center gap-2 rounded-md border p-2.5 text-sm ${
+                            response === 'yes'
+                              ? 'border-green-200 bg-green-50'
+                              : 'border-red-200 bg-red-50'
+                          }`}
+                        >
+                          {response === 'yes' ? (
+                            <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                          ) : (
+                            <XCircle className="h-4 w-4 text-red-600 shrink-0" />
+                          )}
+                          <span className="font-medium">{sound}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+              {lingTest.observations && (
+                <>
+                  <Separator />
+                  <div>
+                    <h4 className="font-medium mb-1">Observations</h4>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{lingTest.observations}</p>
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <p className="text-muted-foreground text-sm">No Ling-6 test data available.</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

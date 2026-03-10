@@ -67,8 +67,7 @@ export function LingSoundButton({ sound }: LingSoundButtonProps) {
       
       // Set the source and play the new sound.
       audioPlayer.src = audioSrc;
-      audioPlayer.play().catch(err => {
-        console.error("Error playing audio:", err);
+      audioPlayer.play().catch(() => {
         setIsPlaying(false); // Ensure state is reset on playback error
       });
     }
