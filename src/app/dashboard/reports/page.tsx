@@ -11,12 +11,13 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { Loader2, Baby, ShieldCheck, ListChecks, Ear, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, Baby, ShieldCheck, ListChecks, Ear, AlertTriangle, CheckCircle2, XCircle, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { motion } from 'framer-motion';
 
 export default function ReportPage() {
   const { user } = useAuth();
@@ -71,20 +72,49 @@ export default function ReportPage() {
 
   const { profile, screening, milestones, lingTest } = reportData;
 
+  const reportCards = [
+    { key: 'header', delay: 0 },
+    { key: 'profile', delay: 0.1 },
+    { key: 'screening', delay: 0.2 },
+    { key: 'milestones', delay: 0.3 },
+    { key: 'ling', delay: 0.4 },
+  ];
+
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Comprehensive Infant Hearing Report</CardTitle>
-          <CardDescription>A complete summary of all recorded information.</CardDescription>
-        </CardHeader>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="border-2 bg-gradient-to-r from-primary/5 to-indigo-500/5">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-primary/10">
+                <FileText className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl">Comprehensive Infant Hearing Report</CardTitle>
+                <CardDescription>A complete summary of all recorded information.</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
+      </motion.div>
 
       {/* Infant Profile */}
-      <Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+      >
+      <Card className="hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Baby className="h-5 w-5 text-sky-500" /> Infant Profile
+            <div className="p-1.5 rounded-lg bg-sky-500/10">
+              <Baby className="h-5 w-5 text-sky-500" />
+            </div>
+            Infant Profile
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -124,12 +154,21 @@ export default function ReportPage() {
           )}
         </CardContent>
       </Card>
+      </motion.div>
 
       {/* Screening & Risk Factors */}
-      <Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+      <Card className="hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <ShieldCheck className="h-5 w-5 text-teal-500" /> Screening Status
+            <div className="p-1.5 rounded-lg bg-teal-500/10">
+              <ShieldCheck className="h-5 w-5 text-teal-500" />
+            </div>
+            Screening Status
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -163,12 +202,21 @@ export default function ReportPage() {
           )}
         </CardContent>
       </Card>
+      </motion.div>
 
       {/* Auditory Milestones */}
-      <Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
+      <Card className="hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <ListChecks className="h-5 w-5 text-amber-500" /> Completed Milestones
+            <div className="p-1.5 rounded-lg bg-amber-500/10">
+              <ListChecks className="h-5 w-5 text-amber-500" />
+            </div>
+            Completed Milestones
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -191,12 +239,21 @@ export default function ReportPage() {
           )}
         </CardContent>
       </Card>
+      </motion.div>
 
       {/* Ling-6 Sound Test */}
-      <Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+      >
+      <Card className="hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Ear className="h-5 w-5 text-indigo-500" /> Ling-6 Sound Test
+            <div className="p-1.5 rounded-lg bg-indigo-500/10">
+              <Ear className="h-5 w-5 text-indigo-500" />
+            </div>
+            Ling-6 Sound Test
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -248,6 +305,7 @@ export default function ReportPage() {
           )}
         </CardContent>
       </Card>
+      </motion.div>
     </div>
   );
 }

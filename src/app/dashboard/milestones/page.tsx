@@ -20,16 +20,19 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
+import { useConfetti } from '@/hooks/use-confetti';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, ArrowRight, ArrowLeft, Save, Info } from 'lucide-react';
+import { Loader2, ArrowRight, ArrowLeft, Save, Info, Award, Star, Trophy } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
 
 export default function MilestonesPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { quickCelebrate } = useConfetti();
   const [completedMilestones, setCompletedMilestones] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -75,12 +78,19 @@ export default function MilestonesPage() {
     }
   }, [isTracking, fetchMilestonesData]);
 
-  const handleToggleMilestone = (milestone: string) => {
+  const handleToggleMilestone = (milestone: string, element?: HTMLElement) => {
+    const isCurrentlyCompleted = completedMilestones.includes(milestone);
+
     setCompletedMilestones((prev) =>
       prev.includes(milestone)
         ? prev.filter((m) => m !== milestone)
         : [...prev, milestone]
     );
+
+    // Trigger confetti when checking (not unchecking)
+    if (!isCurrentlyCompleted && element) {
+      quickCelebrate(element);
+    }
   };
 
   const handleSaveChanges = async () => {
@@ -175,60 +185,106 @@ export default function MilestonesPage() {
           <CardContent className="min-h-[300px]">
             {currentGroupIndex < totalGroups ? (
                 <div key={currentGroup.ageGroup}>
-                    <h3 className="text-lg font-medium text-primary mb-4">{currentGroup.ageGroup}</h3>
-                    <h4 className="text-md font-semibold text-foreground mb-3">Auditory Milestones</h4>
-                    <div className="space-y-4 pl-2 mb-6">
-                    {currentGroup.milestones.map((milestone) => (
-                        <div key={milestone} className="flex items-center space-x-3">
+                    <div className="flex items-center gap-3 mb-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-200">
+                      <div className="p-2 bg-amber-500 rounded-full">
+                        <Star className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-amber-900">{currentGroup.ageGroup}</h3>
+                    </div>
+                    <h4 className="text-md font-semibold text-foreground mb-3 flex items-center gap-2">
+                      <Award className="h-5 w-5 text-blue-500" />
+                      Auditory Milestones
+                    </h4>
+                    <div className="space-y-3 pl-2 mb-6">
+                    {currentGroup.milestones.map((milestone) => {
+                      const isCompleted = completedMilestones.includes(milestone);
+                      return (
+                        <div key={milestone} className={cn(
+                          "flex items-start space-x-3 p-3 rounded-lg transition-all duration-200",
+                          isCompleted ? "bg-green-50 border-2 border-green-200" : "bg-gray-50 hover:bg-gray-100"
+                        )}>
                         <Checkbox
                             id={milestone}
-                            checked={completedMilestones.includes(milestone)}
-                            onCheckedChange={() => handleToggleMilestone(milestone)}
+                            checked={isCompleted}
+                            onCheckedChange={(checked) => {
+                              const el = document.getElementById(milestone);
+                              handleToggleMilestone(milestone, el ?? undefined);
+                            }}
+                            className={cn(isCompleted && "border-green-500")}
                         />
                         <Label
                             htmlFor={milestone}
-                            className="text-sm font-normal leading-snug text-muted-foreground"
+                            className="text-sm font-normal leading-snug text-muted-foreground cursor-pointer flex-1"
                         >
                             {milestone}
                         </Label>
+                        {isCompleted && (
+                          <Trophy className="h-5 w-5 text-green-600 flex-shrink-0" />
+                        )}
                         </div>
-                    ))}
+                      );
+                    })}
                     </div>
                     {currentGroup.speechMilestones && currentGroup.speechMilestones.length > 0 && (
                       <>
-                        <h4 className="text-md font-semibold text-foreground mb-3">Speech and Language Milestones</h4>
-                        <div className="space-y-4 pl-2">
-                        {currentGroup.speechMilestones.map((milestone) => (
-                            <div key={milestone} className="flex items-center space-x-3">
+                        <h4 className="text-md font-semibold text-foreground mb-3 flex items-center gap-2">
+                          <Award className="h-5 w-5 text-purple-500" />
+                          Speech and Language Milestones
+                        </h4>
+                        <div className="space-y-3 pl-2">
+                        {currentGroup.speechMilestones.map((milestone) => {
+                          const isCompleted = completedMilestones.includes(milestone);
+                          return (
+                            <div key={milestone} className={cn(
+                              "flex items-start space-x-3 p-3 rounded-lg transition-all duration-200",
+                              isCompleted ? "bg-green-50 border-2 border-green-200" : "bg-gray-50 hover:bg-gray-100"
+                            )}>
                             <Checkbox
                                 id={milestone}
-                                checked={completedMilestones.includes(milestone)}
-                                onCheckedChange={() => handleToggleMilestone(milestone)}
+                                checked={isCompleted}
+                                onCheckedChange={(checked) => {
+                                  const el = document.getElementById(milestone);
+                                  handleToggleMilestone(milestone, el ?? undefined);
+                                }}
+                                className={cn(isCompleted && "border-green-500")}
                             />
                             <Label
                                 htmlFor={milestone}
-                                className="text-sm font-normal leading-snug text-muted-foreground"
+                                className="text-sm font-normal leading-snug text-muted-foreground cursor-pointer flex-1"
                             >
                                 {milestone}
                             </Label>
+                            {isCompleted && (
+                              <Trophy className="h-5 w-5 text-green-600 flex-shrink-0" />
+                            )}
                             </div>
-                        ))}
+                          );
+                        })}
                         </div>
                       </>
                     )}
                 </div>
             ) : (
-                <div>
-                    <h3 className="text-lg font-medium text-primary mb-4">Summary</h3>
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-sm text-muted-foreground">
-                            <span>Overall Progress</span>
-                            <span>{completedMilestones.length} / {totalMilestones} completed</span>
-                        </div>
-                        <Progress value={progress} />
+                <div className="space-y-6">
+                    <div className="text-center py-8">
+                      <div className="inline-block p-4 bg-gradient-to-br from-yellow-100 to-amber-100 rounded-full mb-4">
+                        <Trophy className="h-16 w-16 text-amber-600" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-primary mb-2">Great Progress!</h3>
+                      <p className="text-muted-foreground">You've reviewed all milestone categories.</p>
                     </div>
-                    <p className="text-muted-foreground text-sm mt-4">
-                        You have reviewed all milestone categories. Click the button below to save your progress.
+                    <div className="space-y-2 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200">
+                        <div className="flex justify-between text-sm font-medium">
+                            <span className="text-blue-900">Overall Progress</span>
+                            <span className="text-blue-900">{completedMilestones.length} / {totalMilestones} completed</span>
+                        </div>
+                        <Progress value={progress} className="h-3" />
+                        <p className="text-blue-700 text-xs pt-2">
+                          {progress.toFixed(0)}% of milestones achieved
+                        </p>
+                    </div>
+                    <p className="text-muted-foreground text-sm text-center">
+                        Click the button below to save your progress.
                     </p>
                 </div>
             )}

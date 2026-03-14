@@ -34,11 +34,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
+import { useConfetti } from '@/hooks/use-confetti';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { Separator } from '@/components/ui/separator';
 import { LingSoundButton } from '@/components/ui/ling-sound-button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
+import { SoundCharacter } from '@/components/ui/sound-character';
 
 const lingTestSchema = z.object({
   observations: z.string().optional(),
@@ -52,12 +55,19 @@ const iconMap: { [key: string]: React.ElementType } = {
   Hand,
 };
 
+const environmentalEmojiMap: { [key: string]: string } = {
+  Bell: '🔔',
+  Rattle: '🎵',
+  Claps: '👏',
+};
+
 // A single Audio instance, shared across all sound button components on this page.
 const audioPlayer = typeof window !== 'undefined' ? new Audio() : null;
 
 export default function LingTestPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { quickCelebrate } = useConfetti();
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -224,9 +234,10 @@ export default function LingTestPage() {
               {LING_SIX_SOUNDS.map(({ sound, ipa, description }) => (
                 <Card
                   key={sound}
-                  className="flex flex-col items-center justify-center p-4 text-center"
+                  className="flex flex-col items-center justify-center p-4 text-center transition-all hover:shadow-lg"
                 >
-                  <p className="text-4xl font-bold font-mono text-primary">
+                  <SoundCharacter sound={sound as 'a' | 'u' | 'i' | 'm' | 's' | 'sh'} className="mb-3" />
+                  <p className="text-3xl font-bold font-mono text-primary">
                     {sound}
                   </p>
                   <p className="text-sm text-muted-foreground">{ipa}</p>
@@ -245,7 +256,13 @@ export default function LingTestPage() {
                       variant={responses[sound] === 'yes' ? 'default' : 'outline'}
                       className={responses[sound] === 'yes' ? 'bg-green-600 hover:bg-green-700' : ''}
                       aria-label={`Responded to ${sound} sound`}
-                      onClick={() => setResponses(prev => ({ ...prev, [sound]: prev[sound] === 'yes' ? null : 'yes' }))}
+                      onClick={(e) => {
+                        const newValue = responses[sound] === 'yes' ? null : 'yes';
+                        setResponses(prev => ({ ...prev, [sound]: newValue }));
+                        if (newValue === 'yes') {
+                          quickCelebrate(e.currentTarget);
+                        }
+                      }}
                     >
                       Yes
                     </Button>
@@ -272,26 +289,43 @@ export default function LingTestPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {ENVIRONMENTAL_SOUNDS.map(({ name, icon }) => {
                 const Icon = iconMap[icon];
+                const emoji = environmentalEmojiMap[name];
+                const isPlayingThis = isSoundLoading === name;
                 return (
                   <Card
                     key={name}
-                    className="flex flex-col items-center justify-center p-4 text-center"
+                    className="flex flex-col items-center justify-center p-4 text-center transition-all hover:shadow-lg"
                   >
-                    <Icon className="h-10 w-10 text-primary" />
+                    <div className={cn(
+                      'w-24 h-24 rounded-full bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center mb-3',
+                      isPlayingThis && 'animate-wiggle'
+                    )}>
+                      <span className="text-5xl" role="img" aria-label={name}>
+                        {emoji}
+                      </span>
+                    </div>
                     <p className="text-lg font-medium mt-2">{name}</p>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => playEnvironmentalSound(name)}
-                      className="mt-4"
-                      disabled={!isClient || (isSoundLoading !== null && isSoundLoading !== name)}
-                    >
-                      {isSoundLoading === name ? (
-                        <Loader2 className="h-6 w-6 animate-spin" />
-                      ) : (
-                        <Volume2 className="h-6 w-6" />
+                    <div className="relative mt-4">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => playEnvironmentalSound(name)}
+                        className={cn(
+                          'relative transition-transform',
+                          isPlayingThis && 'animate-bounce-gentle'
+                        )}
+                        disabled={!isClient || (isSoundLoading !== null && isSoundLoading !== name)}
+                      >
+                        {isSoundLoading === name ? (
+                          <Loader2 className="h-6 w-6 animate-spin" />
+                        ) : (
+                          <Volume2 className="h-6 w-6" />
+                        )}
+                      </Button>
+                      {isPlayingThis && (
+                        <div className="absolute inset-0 rounded-full border-2 border-primary animate-ripple pointer-events-none" />
                       )}
-                    </Button>
+                    </div>
                     <div className="flex gap-2 mt-3">
                       <Button
                         type="button"
@@ -299,7 +333,13 @@ export default function LingTestPage() {
                         variant={responses[name] === 'yes' ? 'default' : 'outline'}
                         className={responses[name] === 'yes' ? 'bg-green-600 hover:bg-green-700' : ''}
                         aria-label={`Responded to ${name} sound`}
-                        onClick={() => setResponses(prev => ({ ...prev, [name]: prev[name] === 'yes' ? null : 'yes' }))}
+                        onClick={(e) => {
+                          const newValue = responses[name] === 'yes' ? null : 'yes';
+                          setResponses(prev => ({ ...prev, [name]: newValue }));
+                          if (newValue === 'yes') {
+                            quickCelebrate(e.currentTarget);
+                          }
+                        }}
                       >
                         Yes
                       </Button>

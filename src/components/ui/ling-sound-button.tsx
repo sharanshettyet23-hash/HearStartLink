@@ -74,13 +74,22 @@ export function LingSoundButton({ sound }: LingSoundButtonProps) {
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={playSound}
-      aria-label={`Play sound ${sound}`}
-    >
-      <Volume2 className={cn('h-6 w-6', isPlaying && 'text-primary animate-pulse')} />
-    </Button>
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={playSound}
+        aria-label={`Play sound ${sound}`}
+        className={cn(
+          'relative transition-transform',
+          isPlaying && 'animate-bounce-gentle'
+        )}
+      >
+        <Volume2 className={cn('h-6 w-6', isPlaying && 'text-primary')} />
+      </Button>
+      {isPlaying && (
+        <div className="absolute inset-0 rounded-full border-2 border-primary animate-ripple pointer-events-none" />
+      )}
+    </div>
   );
 }

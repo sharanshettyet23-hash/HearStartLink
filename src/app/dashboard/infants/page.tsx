@@ -20,7 +20,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UserPlus } from 'lucide-react';
+import { Loader2, UserPlus, Baby, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import {
   Dialog,
   DialogContent,
@@ -130,32 +131,66 @@ export default function InfantsPage() {
     if (infants.length > 0) {
       return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {infants.map((infant) => (
-            <Card
+          {infants.map((infant, index) => (
+            <motion.div
               key={infant.id}
-              className={cn(
-                'p-4 flex items-center justify-between cursor-pointer',
-                selectedInfant?.id === infant.id && 'border-primary'
-              )}
-              onClick={() => handleSelectInfant(infant)}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: index * 0.1, type: 'spring' as const, stiffness: 150, damping: 15 }}
             >
-              <span className="font-medium">{infant.name}</span>
-              <Button variant="outline" size="sm">
-                {selectedInfant?.id === infant.id ? 'Selected' : 'Select'}
-              </Button>
-            </Card>
+              <motion.div whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Card
+                  className={cn(
+                    'p-5 flex items-center justify-between cursor-pointer transition-all duration-300 hover:shadow-lg',
+                    selectedInfant?.id === infant.id
+                      ? 'border-primary bg-primary/5 shadow-md'
+                      : 'hover:border-primary/30'
+                  )}
+                  onClick={() => handleSelectInfant(infant)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      'p-2 rounded-full transition-colors',
+                      selectedInfant?.id === infant.id ? 'bg-primary/20' : 'bg-muted'
+                    )}>
+                      <Baby className={cn(
+                        'h-5 w-5',
+                        selectedInfant?.id === infant.id ? 'text-primary' : 'text-muted-foreground'
+                      )} />
+                    </div>
+                    <span className="font-medium">{infant.name}</span>
+                  </div>
+                  {selectedInfant?.id === infant.id ? (
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  ) : (
+                    <Button variant="outline" size="sm">Select</Button>
+                  )}
+                </Card>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
       );
     }
 
     return (
-      <div className="text-center py-12 border-2 border-dashed rounded-lg">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+        className="text-center py-12 border-2 border-dashed rounded-lg bg-muted/30"
+      >
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' as const }}
+        >
+          <Baby className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
+        </motion.div>
         <h3 className="text-lg font-medium text-muted-foreground">No infants found</h3>
         <p className="text-sm text-muted-foreground mt-1">
           Click the &quot;Add Infant&quot; button to get started.
         </p>
-      </div>
+      </motion.div>
     );
   };
 

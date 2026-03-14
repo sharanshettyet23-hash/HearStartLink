@@ -7,20 +7,26 @@
   },
   {
     "id": "dashboard-baby-1",
-    "description": "A cute baby sleeping peacefully.",
-    "imageUrl": "https://images.unsplash.com/photo-1543346242-2b8e41fb91ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzbGVlcGluZyUyMGJhYnl8ZW58MHx8fHwxNzYyMDkzOTg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    "imageHint": "sleeping baby"
+    "description": "Early Hearing Matters - Monitor Your Baby's Hearing Journey",
+    "imageUrl": "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb3RoZXIlMjBiYWJ5JTIwbGlzdGVuaW5nfGVufDB8fHx8MTczNDAwMDAwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+    "imageHint": "mother with baby, bonding and listening"
   },
   {
     "id": "dashboard-baby-2",
-    "description": "A baby smiling and looking at the camera.",
-    "imageUrl": "https://images.unsplash.com/photo-1597117753473-9a20330f5fb7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzbWlsaW5nJTIwYmFieXxlbnwwfHx8fDE3NjIwMjE3ODJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    "imageHint": "smiling baby"
+    "description": "Track Milestones - Every Sound Counts in Your Baby's Development",
+    "imageUrl": "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxiYWJ5JTIwcGxheWluZyUyMG11c2ljfGVufDB8fHx8MTczNDAwMDAwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+    "imageHint": "baby with colorful toys and music"
   },
   {
     "id": "dashboard-baby-3",
-    "description": "A baby playing with colorful toys.",
-    "imageUrl": "https://images.unsplash.com/photo-1616540389399-3033c4ba7072?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwbGF5aW5nJTIwYmFieXxlbnwwfHx8fDE3NjIwOTM5ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    "imageHint": "playing baby"
+    "description": "Comprehensive Care - Supporting Your Child's Hearing Health",
+    "imageUrl": "https://images.unsplash.com/photo-1566004100631-35d015d6a491?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwYXJlbnQlMjBiYWJ5JTIwaGFwcHl8ZW58MHx8fHwxNzM0MDAwMDAwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    "imageHint": "parent and baby interaction, happy moment"
+  },
+  {
+    "id": "dashboard-baby-4",
+    "description": "Expert Guidance - Professional Hearing Screening for Infants",
+    "imageUrl": "https://images.unsplash.com/photo-1609220136736-443140cffec6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiYWJ5JTIwaGVhbHRoY2FyZXxlbnwwfHx8fDE3MzQwMDAwMDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    "imageHint": "infant healthcare and monitoring"
   }
 ]

@@ -5,6 +5,7 @@
 export const HIGH_RISK_FACTORS = [
   {
     category: 'Family and Genetic History',
+    icon: 'Users',
     factors: [
       'Parents are <strong>blood relatives</strong> (consanguineous marriage).',
       'There is a family history of <strong>permanent childhood hearing loss</strong> or genetic syndromes associated with hearing impairment.',
@@ -12,6 +13,7 @@ export const HIGH_RISK_FACTORS = [
   },
   {
     category: 'During Pregnancy',
+    icon: 'HeartPulse',
     factors: [
       'The mother had a <strong>serious illness or high fever</strong> during pregnancy.',
       'The mother took <strong>medications known to affect hearing</strong> (such as aminoglycosides).',
@@ -23,12 +25,14 @@ export const HIGH_RISK_FACTORS = [
   },
   {
     category: 'During Delivery (Perinatal Factors)',
+    icon: 'Truck',
     factors: [
       'History of <strong>complicated or non-normal delivery</strong> (e.g., emergency cesarean section, prolonged labor, instrumental delivery such as forceps or vacuum extraction).',
     ],
   },
   {
     category: 'At Birth',
+    icon: 'Baby',
     factors: [
       'The baby was born <strong>before 36 weeks</strong> of pregnancy (premature).',
       'The baby\'s <strong>birth weight was low</strong>, especially below 1500 grams.',
@@ -41,6 +45,7 @@ export const HIGH_RISK_FACTORS = [
   },
   {
     category: 'Physical and Structural Indicators',
+    icon: 'Scan',
     factors: [
       '<strong>Craniofacial anomalies</strong>, including those involving the pinna, ear canal, ear tags, ear pits, and temporal bone anomalies.',
       'The baby was born with <strong>abnormalities in the head, ears, eyes, lips, or face</strong>.',
@@ -49,6 +54,7 @@ export const HIGH_RISK_FACTORS = [
   },
   {
     category: 'Health Conditions After Birth',
+    icon: 'Stethoscope',
     factors: [
       'The child had <strong>bacterial meningitis</strong> or brain infections (e.g., encephalitis).',
       'The child had illnesses like <strong>measles or mumps</strong>.',
@@ -170,4 +176,109 @@ export const ENVIRONMENTAL_SOUNDS = [
   { name: 'Bell', icon: 'BellRing', src: '/audio/ling6/bell.mp3' },
   { name: 'Rattle', icon: 'ToyBrick', src: '/audio/ling6/rattle.mp3' },
   { name: 'Claps', icon: 'Hand', src: '/audio/ling6/claps.mp3' },
+];
+
+// Landing page content
+
+export const LANDING_STATS = [
+  { value: 6, label: 'Ling Sounds', suffix: '', icon: 'Ear', color: 'text-indigo-500' },
+  { value: 30, label: 'Milestones Tracked', suffix: '+', icon: 'ListChecks', color: 'text-amber-500' },
+  { value: 7, label: 'Screening Modules', suffix: '', icon: 'Sparkles', color: 'text-blue-500' },
+  { value: 24, label: 'Months Coverage', suffix: '', icon: 'Shield', color: 'text-emerald-500' },
+];
+
+export const LANDING_FEATURES = [
+  {
+    title: 'Hearing Screening & Detection',
+    description: 'Comprehensive screening protocols following JCIH guidelines. Identify potential hearing issues early with structured result tracking.',
+    icon: 'Ear',
+    color: 'text-indigo-500',
+    bgColor: 'bg-indigo-500',
+    gradient: 'from-indigo-500/10 to-indigo-500/5',
+    highlights: [
+      'OAE & ABR result logging',
+      'Risk factor assessment',
+      'AI-powered recommendations',
+    ],
+  },
+  {
+    title: 'Developmental Milestones',
+    description: 'Track auditory and speech milestones from birth to 24 months against clinically validated benchmarks.',
+    icon: 'ListChecks',
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-500',
+    gradient: 'from-amber-500/10 to-amber-500/5',
+    highlights: [
+      '7 age-group milestones',
+      'Auditory & speech tracking',
+      'Progress visualization',
+    ],
+  },
+  {
+    title: 'Ling Six Sound Testing',
+    description: 'Perform the gold-standard Ling Six Sound Test with guided audio playback. Record and track responses across sessions.',
+    icon: 'Sparkles',
+    color: 'text-rose-500',
+    bgColor: 'bg-rose-500',
+    gradient: 'from-rose-500/10 to-rose-500/5',
+    highlights: [
+      'Guided sound playback',
+      'Response recording',
+      'Environmental sound tests',
+    ],
+  },
+];
+
+export const LANDING_STEPS = [
+  {
+    step: 1,
+    title: 'Create Your Account',
+    description: 'Sign up in seconds. Your data is securely stored and private.',
+    icon: 'UserPlus',
+  },
+  {
+    step: 2,
+    title: 'Add Your Infant',
+    description: "Enter your baby's details to create their personal hearing health profile.",
+    icon: 'Baby',
+  },
+  {
+    step: 3,
+    title: 'Assess Risk Factors',
+    description: 'Complete the risk factor checklist based on pregnancy, birth, and family history.',
+    icon: 'AlertTriangle',
+  },
+  {
+    step: 4,
+    title: 'Screen & Test',
+    description: 'Log screening results and perform the Ling Six Sound Test with guided audio.',
+    icon: 'ClipboardCheck',
+  },
+  {
+    step: 5,
+    title: 'Track & Report',
+    description: 'Monitor milestones, view progress charts, and generate comprehensive reports.',
+    icon: 'FileText',
+  },
+];
+
+export const LANDING_TESTIMONIALS = [
+  {
+    quote: "HearStart gave us peace of mind during our son's first year. The milestone tracker helped us know exactly what to look for and when to seek help.",
+    name: 'Priya M.',
+    role: 'Parent of a 14-month-old',
+    rating: 5,
+  },
+  {
+    quote: 'As a pediatric audiologist, I recommend HearStart to all new parents. The Ling Six Sound Test feature is remarkably well-implemented and easy to use.',
+    name: 'Dr. Rajesh K.',
+    role: 'Pediatric Audiologist',
+    rating: 5,
+  },
+  {
+    quote: "The risk factor checklist caught something we would have missed entirely. Early intervention made all the difference for our daughter's development.",
+    name: 'Ananya S.',
+    role: 'Parent of a 2-year-old',
+    rating: 5,
+  },
 ];

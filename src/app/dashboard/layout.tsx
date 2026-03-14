@@ -29,6 +29,7 @@ import {
   Users,
   Moon,
   Sun,
+  Sparkles,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -49,6 +50,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { AppLogo } from '@/components/icons';
 import { useTheme } from 'next-themes';
 import { InfantProvider, useInfant } from '@/hooks/use-infant';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -61,40 +63,63 @@ const navItems = [
   { href: '/dashboard/reports', icon: FileText, label: 'Reports' },
 ];
 
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return { text: 'Good Morning', emoji: '🌅' };
+  if (hour < 17) return { text: 'Good Afternoon', emoji: '☀️' };
+  return { text: 'Good Evening', emoji: '🌙' };
+}
+
 function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useAuth();
   const { setTheme } = useTheme();
   const { selectedInfant } = useInfant();
+  const greeting = getGreeting();
 
   const handleSignOut = async () => {
     await firebaseSignOut(auth);
     router.push('/');
   };
 
+  const currentPage = navItems.find(item => item.href === pathname);
+
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 p-2">
-            <AppLogo className="w-8 h-8" />
-            <span className="text-lg font-semibold font-headline">HearStart</span>
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' as const }}
+            >
+              <AppLogo className="w-8 h-8" />
+            </motion.div>
+            <span className="text-lg font-semibold font-headline bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">
+              HearStart
+            </span>
           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
-                  <SidebarMenuButton
-                    isActive={pathname === item.href}
-                    tooltip={{ children: item.label, side: 'right' }}
-                  >
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </Link>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                >
+                  <Link href={item.href}>
+                    <SidebarMenuButton
+                      isActive={pathname === item.href}
+                      tooltip={{ children: item.label, side: 'right' }}
+                    >
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </Link>
+                </motion.div>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
@@ -111,18 +136,50 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
+        <motion.header
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30"
+        >
           <SidebarTrigger className="md:hidden" />
           <div className="w-full flex-1">
             {selectedInfant ? (
-              <div className="flex items-center gap-2">
-                <Baby className="h-6 w-6 text-primary" />
-                <span className="font-semibold text-lg">{selectedInfant.name}</span>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-3"
+              >
+                <div className="p-1.5 rounded-full bg-primary/10">
+                  <Baby className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <span className="font-semibold text-lg">{selectedInfant.name}</span>
+                  <span className="text-muted-foreground text-sm ml-3 hidden sm:inline">
+                    {greeting.emoji} {greeting.text}!
+                  </span>
+                </div>
+              </motion.div>
             ) : (
-              <span className="text-muted-foreground">Select an Infant from the Manage Infants page.</span>
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-amber-500" />
+                <span className="text-muted-foreground">Select an infant from Manage Infants to get started</span>
+              </div>
             )}
           </div>
+
+          {/* Current page indicator */}
+          {currentPage && pathname !== '/dashboard' && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10"
+            >
+              <currentPage.icon className="h-3.5 w-3.5 text-primary" />
+              <span className="text-xs font-medium text-primary">{currentPage.label}</span>
+            </motion.div>
+          )}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
@@ -162,8 +219,20 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
               <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </header>
-        <main className="flex-1 p-4 sm:p-6">{children}</main>
+        </motion.header>
+        <main className="flex-1 p-4 sm:p-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: 'easeOut' as const }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );
