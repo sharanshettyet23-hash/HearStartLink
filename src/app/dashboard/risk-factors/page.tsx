@@ -22,7 +22,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { HIGH_RISK_FACTORS } from '@/lib/constants';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, Save, AlertTriangle, ArrowRight, ArrowLeft, Users, HeartPulse, Truck, Baby, Scan, Stethoscope } from 'lucide-react';
+import { Loader2, Save, AlertTriangle, ArrowRight, ArrowLeft, Users, HeartPulse, PersonStanding, Baby, Scan, Stethoscope } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -33,7 +33,7 @@ import { Progress } from '@/components/ui/progress';
 const iconMap: { [key: string]: React.ElementType } = {
   Users,
   HeartPulse,
-  Truck,
+  PersonStanding,
   Baby,
   Scan,
   Stethoscope,
@@ -123,7 +123,7 @@ export default function RiskFactorsPage() {
           <CardHeader>
             <CardTitle>High-Risk Factors for Hearing Loss</CardTitle>
             <CardDescription>
-              Select any factors that apply to the infant. This information helps in generating personalized recommendations.
+              Select any factors that apply to the infant.
             </CardDescription>
 
             <Alert className="mt-4 bg-blue-50 border-blue-200">

@@ -25,7 +25,7 @@ export const HIGH_RISK_FACTORS = [
   },
   {
     category: 'During Delivery (Perinatal Factors)',
-    icon: 'Truck',
+    icon: 'PersonStanding',
     factors: [
       'History of <strong>complicated or non-normal delivery</strong> (e.g., emergency cesarean section, prolonged labor, instrumental delivery such as forceps or vacuum extraction).',
     ],
